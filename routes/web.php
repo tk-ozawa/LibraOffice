@@ -20,6 +20,11 @@ Route::get('/search/order/input', 'BookController@goOrderByISBN');
 Route::get('/order/input', 'BookController@goOrder');
 Route::get('/order', 'BookController@order');
 
-Route::get('/login', 'UserController@goLogin');
+Route::get('/', 'UserController@goLogin');
+Route::get('/login', 'UserController@login');
+
+Route::get('/top', 'UserController@goTop')->name('top');
 
 Route::get('/test', 'UserController@register');
+Route::get('/user/input', 'UserController@goRegister');
+Route::get('/user/add', 'UserController@register')->name('user.add');
