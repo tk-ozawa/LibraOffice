@@ -32,5 +32,12 @@
 	@endforeach
 	<br>
 	出版元:{{ $publisherProp->name }}
+
+	<br>
+	@if (session('auth') === 0)
+		<a href="{{ route('master.top') }}">戻る</a>
+	@else
+		<a href="{{ route('normal.top') }}">戻る</a>
+	@endif
 </body>
 </html>
