@@ -16,7 +16,7 @@ class CreateOrdersTable extends Migration
 		Schema::create('orders', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('request_user_id')->comment('依頼者ID')->unsigned();
-			$table->integer('approval_user_id')->comment('承諾者ID')->unsigned();
+			$table->integer('approval_user_id')->comment('承諾者ID')->nullable()->unsigned();
 			$table->integer('book_id')->comment('書籍ID')->unsigned();
 			$table->integer('office_id')->comment('オフィスID')->unsigned();
 			$table->timestamps();

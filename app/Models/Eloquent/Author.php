@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +16,7 @@ class Author extends Model
 	{
 		// 多対多
 		return $this->belongsToMany(
-			'App\Models\Book'				// 参照先テーブルモデル
+			'App\Models\Eloquent\Book'				// 参照先テーブルモデル
 			, 'book_author_relationships'		// 中間テーブルのテーブル名
 			, 'author_id'					// 中間テーブルの参照元外部キー
 			, 'book_id'						// 中間テーブルの参照先外部キー

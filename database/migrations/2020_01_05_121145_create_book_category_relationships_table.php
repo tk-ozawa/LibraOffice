@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBookCategoriesRelationshipsTable extends Migration
+class CreateBookCategoryRelationshipsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBookCategoriesRelationshipsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('book_categories_relationships', function (Blueprint $table) {
+		Schema::create('book_category_relationships', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('book_id')->unsigned();
 			$table->integer('category_id')->unsigned();
@@ -30,6 +30,6 @@ class CreateBookCategoriesRelationshipsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('book_categories_relationships');
+		Schema::dropIfExists('book_category_relationships');
 	}
 }
