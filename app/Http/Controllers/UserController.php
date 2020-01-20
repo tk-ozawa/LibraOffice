@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\BookService;
 use App\Models\Database\UserProp;
 
 class UserController extends Controller
 {
 	private $user;
+	private $book;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user)
+	function __construct(UserService $user, BookService $book)
 	{
 		$this->user = $user;
+		$this->book = $book;
 	}
 
 	/**
@@ -25,7 +28,7 @@ class UserController extends Controller
 	 */
 	public function goLogin(Request $request)
 	{
-		# code...
+		return  view('user.login');
 	}
 
 	/**
@@ -41,12 +44,21 @@ class UserController extends Controller
 		$valiMsg = '';
 
 		// バリデーションエラー
-		if ($valiMsg = $this->user->loginCheck($loginEmail, $loginPw) !== null) {
-			return redirect('/user')->with('valiMsg', $valiMsg);
+		if (($valiMsg = $this->user->loginCheck($loginEmail, $loginPw)) !== null) {
+			dd($valiMsg);
+			// return redirect('/user')->with('valiMsg', $valiMsg);
 		}
 
 		// セッション付与
+		$loginUser = $this->user->findByEmail($loginEmail);
+		$session = $request->session();
+		$session->put('id', $loginUser->id);
+		$session->put('email', $loginEmail);
+		$session->put('office_id', $loginUser->office_id);
+		$session->put('auth', $loginUser->auth);
+
 		// TOPページ遷移
+		return redirect(route('top'))->with('flashMsg', 'ログインしました。');
 	}
 
 	/**
@@ -54,7 +66,7 @@ class UserController extends Controller
 	 */
 	public function goRegister(Request $request)
 	{
-
+		return view('user.add');
 	}
 
 	/**
@@ -64,25 +76,42 @@ class UserController extends Controller
 	{
 		$input = $request->all();
 
-		$input = [
-			'name' => 'aaa',
-			'email' => 'aaa@aaa.aa',
-			'password' => 'hoge',
-			'tel' => '1234567890',
+		// ダミーデータ
+		$session = [
+			'office_id' => 1,
+			'user_id' => 1,
+			'auth' => 0
 		];
 
-		$userProp = new UserProp();
-		$usersProp = $userProp->refineByColumn($input);
+		$userProp = new UserProp($input);
+		$userProp->office_id = $session['office_id'];	// 登録者と同じオフィス
+		$userProp->password = substr(bin2hex(random_bytes(7)), 0, 7);	// メールで知らせる
 
-		// $userColumn = $userProp->getColumnNames();
-		// $usersProp = [];
-		// foreach ($input as $inputParam) {	// 配列 as obj
-		// 	foreach ($userColumn as $column) {	// 配列 as str
-		// 		$userProp->$column = $inputParam->$column;
-		// 	}
-		// 	$usersProp[] = $userProp;
-		// }
-		dd($usersProp);
+		$newUser = $this->user->add($userProp);
 
+		// メール送信
+
+		dd($userProp);
+		// topに戻ってflashMsg
+	}
+
+	/**
+	 * TOP画面表示処理
+	 */
+	public function goTop(Request $request)
+	{
+		/*
+			"email" => "test@test.com"
+			"id" => 2
+			"auth" => 0
+			"flashMsg" => "ログインしました。"
+			"office_id" => 1
+		 */
+
+
+		dd($request->session()->all());
+
+
+		return view('top');
 	}
 }

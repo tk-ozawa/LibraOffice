@@ -17,12 +17,12 @@ class CreateUsersTable extends Migration
 			$table->increments('id');
 			$table->string('name')->comment('社員名');
 			$table->string('email')->comment('メールアドレス');
-			$table->string('password');
+			$table->string('password')->nullable();
 			$table->integer('office_id')->comment('所属オフィスID')->unsigned();
 			$table->integer('auth')->comment('権限 0:幹部以上, 1:一般');
 			$table->string('profile')->nullable()->comment('自己紹介');
-			$table->date('birthday')->nullable()->commnet('生年月日');
-			$table->integer('status')->default(1)->commnet('アカウント状態 0:無効, 1:有効');
+			$table->date('birthday')->nullable()->comment('生年月日');
+			$table->integer('status')->default(0)->comment('アカウント状態 0:無効, 1:有効');
 			$table->timestamps();
 
 			$table->foreign('office_id')->references('id')->on('offices');

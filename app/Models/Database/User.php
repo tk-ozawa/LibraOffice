@@ -2,10 +2,9 @@
 
 namespace App\Models\Database;
 
-// use App\Models\DynamicProperty;
-
-class UserProp // extends DynamicProperty
+class UserProp
 {
+
 	public $name;
 
 	public $email;
@@ -16,14 +15,28 @@ class UserProp // extends DynamicProperty
 
 	public $auth;
 
-	public $tel;
+	public $profile;
 
 	public $birthday;
 
-	public $url;
-
 	public $status;
 
+	public function __construct(array $inputArr = null)
+	{
+		if (empty($inputArr)) return $this;
+
+		// 連想配列をUserオブジェクトに変換する
+		foreach ($inputArr as $key => $val) {
+			$this->$key = $val;
+		}
+		return $this;
+	}
+
+	/**
+	 * 全カラム名を取得する
+	 *
+	 * @return array $result
+	 */
 	public function getColumnNames(): array
 	{
 		$result = [];
@@ -33,7 +46,17 @@ class UserProp // extends DynamicProperty
 		return $result;
 	}
 
-	public function refineByColumn(array $inputArr): array
+	/**
+	 * オブジェクトを連想配列に変換
+	 *
+	 * @param UserProp
+	 */
+	public static function objToArr(UserProp $userProp)
 	{
+		$result = [];
+		foreach ($userProp as $key => $val) {
+			$result[$key] = $val;
+		}
+		return $result;
 	}
 }
