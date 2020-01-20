@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +16,7 @@ class Publisher extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Book'				// 子テーブルモデル
+			'App\Models\Eloquent\Book'				// 子テーブルモデル
 			, 'publisher_id'				// 参照先の外部キー
 			, 'id'							// 参照元の主キー
 		);

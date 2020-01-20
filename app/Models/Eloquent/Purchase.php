@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,7 +19,7 @@ class Purchase extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Rental'		// 子テーブルモデル
+			'App\Models\Eloquent\Rental'		// 子テーブルモデル
 			, 'purchase_id'			// 参照先の外部キー
 			, 'id'					// 参照元の主キー
 		);

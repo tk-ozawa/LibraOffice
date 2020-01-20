@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +16,7 @@ class Book extends Model
 	{
 		// 多対1
 		return $this->belongsTo(
-			'App\Models\Publisher'			// 親テーブルモデル
+			'App\Models\Eloquent\Publisher'			// 親テーブルモデル
 			, 'publisher_id'				// 参照元の外部キー
 			, 'id'							// 参照先の主キー
 		);
@@ -26,7 +26,7 @@ class Book extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Order'				// 子テーブルモデル
+			'App\Models\Eloquent\Order'		// 子テーブルモデル
 			, 'book_id'						// 参照先の外部キー
 			, 'id'							// 参照元の主キー
 		);
@@ -36,7 +36,7 @@ class Book extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Purchase'			// 子テーブルモデル
+			'App\Models\Eloquent\Purchase'			// 子テーブルモデル
 			, 'book_id'						// 参照先の外部キー
 			, 'id'							// 参照元の主キー
 		);
@@ -46,7 +46,7 @@ class Book extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Rental'				// 子テーブルモデル
+			'App\Models\Eloquent\Rental'				// 子テーブルモデル
 			, 'book_id'						// 参照先の外部キー
 			, 'id'							// 参照元の主キー
 		);
@@ -56,7 +56,7 @@ class Book extends Model
 	{
 		// 多対多
 		return $this->belongsToMany(
-			'App\Models\Category'		// 参照先テーブルモデル
+			'App\Models\Eloquent\Category'		// 参照先テーブルモデル
 			, 'book_category_relationships'	// 中間テーブルのテーブル名
 			, 'book_id'						// 中間テーブルの参照元外部キー
 			, 'category_id'					// 中間テーブルの参照先外部キー
@@ -69,7 +69,7 @@ class Book extends Model
 	{
 		// 多対多
 		return $this->belongsToMany(
-			'App\Models\Author'				// 参照先テーブルモデル
+			'App\Models\Eloquent\Author'				// 参照先テーブルモデル
 			, 'book_author_relationships'		// 中間テーブルのテーブル名
 			, 'book_id'						// 中間テーブルの参照元外部キー
 			, 'author_id'					// 中間テーブルの参照先外部キー

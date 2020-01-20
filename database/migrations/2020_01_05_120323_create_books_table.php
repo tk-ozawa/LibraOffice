@@ -16,9 +16,9 @@ class CreateBooksTable extends Migration
 		Schema::create('books', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('title')->comment('書籍名');
-			$table->string('ISBN');
+			$table->string('ISBN')->nullable();
 			$table->integer('edition')->comment('版');
-			$table->string('img_url')->comment('表紙画像URL');
+			$table->string('img_url')->nullable()->comment('表紙画像URL');
 			$table->integer('publisher_id')->comment('出版社ID')->unsigned();
 			$table->integer('price')->comment('価格');
 			$table->date('release_date')->comment('発売日');
