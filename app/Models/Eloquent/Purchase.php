@@ -13,7 +13,7 @@ class Purchase extends Model
 
 	public $timestamps = true;	// created_at, updated_at有
 
-	protected $fillabe = ['book_id', 'user_id', 'office_id', 'purchase_date', 'status'];
+	protected $fillable = ['book_id', 'user_id', 'office_id', 'purchase_date', 'status'];
 
 	public function rentals()
 	{
