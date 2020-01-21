@@ -146,6 +146,7 @@ class BookService
 		$categoriesColumn = $categoryProp->getColumnNames();
 		$categoriesProp = [];
 		foreach ($categoriesAPI as $categoryName) {	// 配列 as obj
+			$categoryProp = new CategoryProp();
 			$categoryProp->name = $categoryName;
 			$categoriesProp[] = $categoryProp;
 		}
@@ -157,6 +158,7 @@ class BookService
 		$authorsColumn = $authorProp->getColumnNames();
 		$authorsProp = [];
 		foreach ($authorsAPI as $authorName) {	// 配列 as obj
+			$authorProp = new CategoryProp();
 			$authorProp->name = $authorName;
 			$authorsProp[] = $authorProp;
 		}
@@ -276,7 +278,6 @@ class BookService
 		$bookObj = $query->first();
 		return $bookObj;
 	}
-
 
 	/**
 	 * 本idからDBより本情報を取得する
