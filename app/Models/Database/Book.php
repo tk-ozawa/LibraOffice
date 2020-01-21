@@ -17,6 +17,7 @@ class BookProp extends DynamicProperty
 	public $img_url;
 
 	public $publisher_id;
+	public $publisher_name;
 
 	public $price;
 
@@ -27,6 +28,17 @@ class BookProp extends DynamicProperty
 
 	public $authors;
 	public $authorsStr;
+
+	public function __construct(array $inputArr = null)
+	{
+		if (empty($inputArr)) return $this;
+
+		// 連想配列をBookオブジェクトに変換する
+		foreach ($inputArr as $key => $val) {
+			$this->$key = $val;
+		}
+		return $this;
+	}
 
 	public function getColumnNames(): array
 	{
