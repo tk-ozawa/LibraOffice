@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\BookService;
 use App\Services\OrderService;
+use App\Services\PurchaseService;
 use App\Models\Database\UserProp;
 
 class MasterController extends Controller
@@ -13,17 +14,19 @@ class MasterController extends Controller
 	private $user;
 	private $book;
 	private $order;
+	private $purchase;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, BookService $book, OrderService $order)
+	function __construct(UserService $user, BookService $book, OrderService $order, PurchaseService $purchase)
 	{
 		$this->user = $user;
 		$this->book = $book;
 		$this->order = $order;
+		$this->purchase = $purchase;
 	}
 
 	/**
@@ -82,10 +85,37 @@ class MasterController extends Controller
 
 
 		// 社内図書 - purchasesリスト取得
+		// 発注中のリスト取得
+		$orderings = $this->purchase->getOrderings();
+		// dd($orderings);
 
-		dump($requests);
+		// 所持済みのリスト取得
 
-		return view('master.top', compact('requests'));
+		return view('master.top', compact('requests', 'orderings'));
 	}
 
+	/**
+	 * 注文依頼承諾画面表示処理
+	 */
+	public function goOrderAccept(Request $request, int $orderId)
+	{
+		$order = $this->order->findById($orderId);
+		$book = $order->books;
+		$user = $order->requestUsers;
+
+		return view('master.orderAccept', compact('order', 'book', 'user'));
+	}
+
+	/**
+	 * 注文依頼承諾&書籍発注処理
+	 */
+	public function orderAccept(Request $request)
+	{
+		$input = $request->all();
+		$session = $request->session()->all();
+
+		$purchase = $this->purchase->createPurchase($input['order_id'], $session['id']);
+
+		return redirect(route('master.top'))->with("flashMsg", "発注処理を行いしました。発注ID:{$purchase->id}");
+	}
 }
