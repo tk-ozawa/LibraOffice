@@ -5,22 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\BookService;
+use App\Services\OrderService;
 use App\Models\Database\UserProp;
 
 class MasterController extends Controller
 {
 	private $user;
 	private $book;
+	private $order;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, BookService $book)
+	function __construct(UserService $user, BookService $book, OrderService $order)
 	{
 		$this->user = $user;
 		$this->book = $book;
+		$this->order = $order;
 	}
 
 	/**
@@ -75,11 +78,14 @@ class MasterController extends Controller
 		// dd($request->session()->all());
 
 		// 注文依頼 - ordersリスト取得
+		$requests = $this->order->getRequests();
+
 
 		// 社内図書 - purchasesリスト取得
 
+		dump($requests);
 
-		return view('master.top');
+		return view('master.top', compact('requests'));
 	}
 
 }
