@@ -120,7 +120,6 @@ class BookController extends Controller
 	 */
 	public function order(Request $request)
 	{
-		//
 		/**
 		 * メモ 1/10
 		 * ISBN無し->(取得|登録->取得) 完成
@@ -132,8 +131,6 @@ class BookController extends Controller
 		foreach ($input as $key => $val) {
 			$bookProp->$key = $val;
 		}
-
-
 
 		// 出版社DB登録->取得 | 取得
 		$publisher = $this->publisher->firstOrCreate($bookProp->publisher);
@@ -152,7 +149,6 @@ class BookController extends Controller
 		$bookProp->id = $bookDB->id;
 		$bookDB->authors()->sync($this->author->firstOrCreate(explode(',', $bookProp->authors)));
 		$bookDB->categories()->sync($this->category->firstOrCreate(explode(',', $bookProp->categories)));
-
 
 		// 著者取得
 		$authorsDB = $this->author->getByBookId($bookDB->id);
@@ -180,11 +176,10 @@ class BookController extends Controller
 		}
 		$bookProp->categories = $categoriesProp;
 
-		$tstUsrId = 1;
-		$tstOfi = 1;
+		$session = $request->session()->all();
 
 		// 注文処理
-		$this->order->createRequest($tstUsrId, $bookProp->id, $tstOfi);
+		$this->order->createRequest($session['id'], $bookProp->id, $session['office_id']);
 
 		return view('book.order.orderComplete', compact('bookProp', 'publisherProp'));
 	}
