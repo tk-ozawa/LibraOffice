@@ -139,10 +139,19 @@ class PurchaseService
 		return $this->purchase
 			->where('id', $purchaseId)
 			->with(['books' => function ($q) {
-				$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url');
+				$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+					->with(['categories' => function ($q) {
+						$q->select('categories.id', 'categories.name');
+					}])
+					->with(['authors' => function ($q) {
+						$q->select('authors.id', 'authors.name');
+					}])
+					->with(['publishers' => function ($q) {
+						$q->select('publishers.id', 'publishers.name');
+					}]);
 			}])
-			->with(['users' => function ($q) {
-				$q->select('users.id', 'users.name');
+			->with(['rentals' => function ($q) {
+				$q->select('rentals.id', 'rentals.purchase_id', 'rentals.user_id');
 			}])
 			->first();
 	}
