@@ -8,6 +8,10 @@
 </head>
 <body>
 
+	@if(session('valiMsg'))
+		<p>{{ session('valiMsg') }}</p>
+	@endif
+
 	<form action="login" method="get">
 		メールアドレス：<input type="text" name="email" required>
 		<br>
