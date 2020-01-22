@@ -27,6 +27,11 @@ Route::get('/master', 'MasterController@goTop')->name('master.top');
 Route::get('/master/user/add/input', 'MasterController@goRegister')->name('user.add.input');
 Route::get('/master/user/add', 'MasterController@register')->name('user.add');
 
+Route::get('/master/order/accept/{orderId}', 'MasterController@goOrderAccept')->name('order.accept.confirm');
+Route::get('/master/order/accept', 'MasterController@orderAccept')->name('order.accept');
+Route::get('/master/purchase/complete/{purchaseId}', 'MasterController@goPurchaseComplete')->name('purchase.complete.confirm');
+Route::get('/master/purchase/complete', 'MasterController@purchaseComplete')->name('purchase.complete');
+
 
 Route::get('/normal', 'NormalController@goMasterTop')->name('normal.top');
 

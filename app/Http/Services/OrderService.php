@@ -34,6 +34,23 @@ class OrderService
 	}
 
 	/**
+	 * 注文依頼承諾処理
+	 *
+	 * @param int $orderId
+	 * @param int $approvalUserId
+	 * @return Order $order
+	 */
+	public function orderAccept(int $orderId, int $approvalUserId): Order
+	{
+		// 注文依頼に承諾者情報を追加
+		$order = $this->order->where('id', $orderId)->first();
+		$order->approval_user_id = $approvalUserId;
+		$order->save();
+
+		return $order;
+	}
+
+	/**
 	 * 未承諾な注文一覧を取得
 	 *
 	 * @return array
@@ -67,5 +84,23 @@ class OrderService
 		}
 
 		return $reqProps;
+	}
+
+	/**
+	 * IDによる注文情報取得
+	 *
+	 * @param int $orderId
+	 */
+	public function findById(int $orderId)
+	{
+		return $this->order
+			->where('id', $orderId)
+			->with(['books' => function ($q) {
+				$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url');
+			}])
+			->with(['requestUsers' => function ($q) {
+				$q->select('users.id', 'users.name');
+			}])
+			->first();
 	}
 }
