@@ -22,9 +22,7 @@
 
 	<h2>注文依頼リスト</h2>
 
-	@if(!$requests)
-		<p>注文依頼は現在ありません。</p>
-	@else
+	@if($requests)
 		<table class="table">
 			<thead>
 				<tr>
@@ -58,12 +56,12 @@
 				@endforeach
 			</tbody>
 		</table>
+	@else
+		<p>注文依頼は現在ありません。</p>
 	@endif
 
 	<h2>社内図書(発注中)リスト</h2>
-	@if(!$orderings)
-		<p>発注中の書籍は現在ありません。</p>
-	@else
+	@if($orderings)
 		<table class="table">
 			<thead>
 				<tr>
@@ -101,12 +99,12 @@
 				@endforeach
 			</tbody>
 		</table>
+	@else
+		<p>発注中の書籍は現在ありません。</p>
 	@endif
 
 	<h2>社内図書リスト</h2>
-	@if(!$purchases)
-		<p>登録されている社内図書は現在ありません。</p>
-	@else
+	@if($purchases)
 		<table class="table">
 			<thead>
 				<tr>
@@ -140,6 +138,8 @@
 				@endforeach
 			</tbody>
 		</table>
+	@else
+		<p>登録されている社内図書は現在ありません。</p>
 	@endif
 
 </body>
