@@ -45,8 +45,7 @@ class UserController extends Controller
 
 		// バリデーションエラー
 		if (($valiMsg = $this->user->loginCheck($loginEmail, $loginPw)) !== null) {
-			dd($valiMsg);
-			// return redirect('/user')->with('valiMsg', $valiMsg);
+			return redirect('/')->with('valiMsg', $valiMsg);
 		}
 
 		// セッション付与
