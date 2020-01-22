@@ -87,11 +87,11 @@ class MasterController extends Controller
 		// 社内図書 - purchasesリスト取得
 		// 発注中のリスト取得
 		$orderings = $this->purchase->getOrderings();
-		// dd($orderings);
 
 		// 所持済みのリスト取得
+		$purchases = $this->purchase->getPurchases();
 
-		return view('master.top', compact('requests', 'orderings'));
+		return view('master.top', compact('requests', 'orderings', 'purchases'));
 	}
 
 	/**
@@ -117,5 +117,29 @@ class MasterController extends Controller
 		$purchase = $this->purchase->createPurchase($input['order_id'], $session['id']);
 
 		return redirect(route('master.top'))->with("flashMsg", "発注処理を行いしました。発注ID:{$purchase->id}");
+	}
+
+	/**
+	 * 書籍発注完了申請画面表示処理
+	 */
+	public function goPurchaseComplete(Request $request, int $purchaseId)
+	{
+		$purchase = $this->purchase->findById($purchaseId);
+		$book = $purchase->books;
+		$user = $purchase->users;
+
+		return view('master.purchaseComplete', compact('purchase', 'book', 'user'));
+	}
+
+	/**
+	 * 書籍発注完了申請処理
+	 */
+	public function purchaseComplete(Request $request)
+	{
+		$input = $request->all();
+
+		$purchase = $this->purchase->purchaseComplete($input['purchase_id']);
+
+		return redirect(route('master.top'))->with("flashMsg", "社内図書を登録しました。社内図書ID:{$purchase->id}");
 	}
 }

@@ -54,10 +54,17 @@ class PurchaseService
 
 	/**
 	 * 社内図書情報更新(書籍到着)
+	 *
+	 * @param int $purchaseId
 	 */
-	public function orderComplete()
+	public function purchaseComplete(int $purchaseId)
 	{
+		// 購入情報を更新
+		$purchase = $this->purchase->where('id', $purchaseId)->first();
+		$purchase->status = 1;	// 所持
+		$purchase->save();
 
+		return $purchase;
 	}
 
 	/**
@@ -91,5 +98,52 @@ class PurchaseService
 		}
 
 		return $purProps;
+	}
+
+	/**
+	 * 社内で所持している書籍一覧を取得
+	 *
+	 * @return array
+	 */
+	public function getPurchases(): array
+	{
+		$purchases = $this->purchase->where('status', 1)->get();	// 所持中のみ取得
+
+		$purProps = [];
+		foreach ($purchases as $purchase) {
+			$bookDB = $this->book
+			->where('id', $purchase->book_id)
+			->with(['authors' => function ($q) {
+				$q->select('authors.id', 'authors.name');
+			}])
+			->with(['categories' => function ($q) {
+				$q->select('categories.id', 'categories.name');
+			}])
+			->first();
+
+			$bookProp = new BookProp($bookDB->toArray());
+			$bookProp->publisher_name = $this->publisher->where('id', $bookDB->publisher_id)->first()->name;
+			$purProps[] = ['book' => $bookProp, 'purchase' => $purchase];
+		}
+
+		return $purProps;
+	}
+
+	/**
+	 * IDによる社内図書情報取得
+	 *
+	 * @param int $purchaseId
+	 */
+	public function findById(int $purchaseId)
+	{
+		return $this->purchase
+			->where('id', $purchaseId)
+			->with(['books' => function ($q) {
+				$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url');
+			}])
+			->with(['users' => function ($q) {
+				$q->select('users.id', 'users.name');
+			}])
+			->first();
 	}
 }
