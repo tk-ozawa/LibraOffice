@@ -15,7 +15,7 @@ class Rental extends Model
 	public function purchases()
 	{
 		// 多対1
-		return $this->hasMany(
+		return $this->belongsTo(
 			'App\Models\Eloquent\Purchase'			// 親テーブルモデル
 			, 'purchase_id'					// 参照元の外部キー
 			, 'id'							// 参照先の主キー

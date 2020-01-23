@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Services\BookService;
 use App\Services\CategoryService;
 use App\Services\PublisherService;
+use App\Services\PurchaseService;
 use App\Services\OrderService;
 use App\Services\AuthorService;
+use App\Services\UserService;
+use App\Services\RentalService;
 use App\Models\Database\BookProp;
 use App\Models\Database\AuthorProp;
 use App\Models\Database\CategoryProp;
@@ -21,19 +24,25 @@ class BookController extends Controller
 	private $author;
 	private $category;
 	private $order;
+	private $purchase;
+	private $user;
+	private $rental;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order)
+	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, UserService $user, RentalService $rental)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
 		$this->author = $author;
 		$this->category = $category;
 		$this->order = $order;
+		$this->purchase = $purchase;
+		$this->user = $user;
+		$this->rental = $rental;
 	}
 
 	/**
@@ -77,19 +86,6 @@ class BookController extends Controller
 	 */
 	public function goOrder(Request $request)
 	{
-		/**
-		 * 必要：
-		 * 		title
-		 * 		price
-		 * 		release_date
-		 * 		publisher (同人誌の場合:'同人誌') 将来的にはラジオボタンで切り替え
-		 * 		authors (配列)
-		 * 		categories (配列)
-		 * 		edition : 1固定
-		 * NULL：
-		 * 		img_url
-		 * 		ISBN
-		 */
 		return view('book.order.orderNoISBN');
 	}
 
@@ -182,5 +178,66 @@ class BookController extends Controller
 		$this->order->createRequest($session['id'], $bookProp->id, $session['office_id']);
 
 		return view('book.order.orderComplete', compact('bookProp', 'publisherProp'));
+	}
+
+	/**
+	 * 社内図書詳細画面表示処理
+	 */
+	public function goBookDetail(Request $request, int $purchaseId)
+	{
+		$purchase = $this->purchase->findById($purchaseId);
+		$book = $purchase->books;
+		$publisher = $book->publishers;
+		$categories = $book->categories;
+		$authors = $book->authors;
+
+		// 借りたことのあるユーザー一覧
+		$users = [];
+		foreach ($purchase->rentals as $rental) {
+			$users[] = $this->user->findById($rental->user_id);
+		}
+
+		// 貸出中かどうか
+		$isRental = $this->rental->is_rental($purchase->id);
+
+		return view('book.detail', compact('purchase', 'book', 'publisher', 'users', 'isRental', 'categories', 'authors'));
+	}
+
+	/**
+	 * 貸出申請処理
+	 */
+	public function rental(Request $request, int $purchaseId)
+	{
+		$session = $request->session()->all();
+
+		$purchase = $this->rental->apply($purchaseId, $session['id']);
+		$book = $purchase->books;
+
+		$flashMsg = "ID:{$book->id}, タイトル:{$book->title}の貸出申請を提出しました。";
+
+		if ($session['auth'] === 0) {
+			return redirect(route('master.top'))->with('flashMsg', $flashMsg);
+		}
+
+		return redirect(route('normal.top'))->with('flashMsg', $flashMsg);
+	}
+
+	/**
+	 * 返却申請処理
+	 */
+	public function return(Request $request, int $purchaseId)
+	{
+		$session = $request->session()->all();
+
+		$purchase = $this->rental->return($purchaseId, $session['id']);
+		$book = $purchase->books;
+
+		$flashMsg = "ID:{$book->id}, タイトル:{$book->title}を返却しました。";
+
+		if ($session['auth'] === 0) {
+			return redirect(route('master.top'))->with('flashMsg', $flashMsg);
+		}
+
+		return redirect(route('normal.top'))->with('flashMsg', $flashMsg);
 	}
 }
