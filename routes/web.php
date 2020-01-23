@@ -20,9 +20,13 @@ Route::get('/login', 'UserController@login');
 
 Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/search', 'BookController@goSearch')->name('search');
-	Route::get('/search/order/input', 'BookController@goOrderByISBN');
-	Route::get('/order/input', 'BookController@goOrder');
-	Route::get('/order', 'BookController@order');
+	Route::get('/search/order/input', 'BookController@goOrderByISBN')->name('search.order.input');
+	Route::get('/order/input', 'BookController@goOrder')->name('order.input');
+	Route::get('/order', 'BookController@order')->name('order');
+
+	Route::get('/book/{purchaseId}', 'BookController@goBookDetail')->name('book.detail');
+	Route::get('/book/{purchaseId}/rental', 'BookController@rental')->name('book.rental');
+	Route::get('/book/{purchaseId}/return', 'BookController@return')->name('book.return');
 
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 

@@ -77,12 +77,8 @@ class MasterController extends Controller
 			"office_id" => 1
 		 */
 
-
-		// dd($request->session()->all());
-
 		// 注文依頼 - ordersリスト取得
 		$requests = $this->order->getRequests();
-
 
 		// 社内図書 - purchasesリスト取得
 		// 発注中のリスト取得
