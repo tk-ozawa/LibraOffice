@@ -24,6 +24,10 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/order/input', 'BookController@goOrder');
 	Route::get('/order', 'BookController@order');
 
+	Route::get('/book/{purchaseId}', 'BookController@goBookDetail')->name('book.detail');
+	Route::get('/book/{purchaseId}/rental', 'BookController@rental')->name('book.rental');
+	Route::get('/book/{purchaseId}/return', 'BookController@return')->name('book.return');
+
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 
 	Route::group(['middleware' => ['CheckMasterAuth']], function () {
