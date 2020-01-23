@@ -58,7 +58,7 @@
 					<th scope="row" class="index-col">{{ $loop->iteration }}</th scope="row">
 					<td class="btn-col">
 						@if ($purchase['isRental'])
-							@if ($purchase['purchase']->user_id === session('id'))
+							@if ($purchase['rentalUserId'] === session('id'))
 								<button class="btn btn-danger" onclick="ReturnCheck({{ $purchase['purchase']->id }}, '{{ $book->title }}');">返却する</button>
 							@else
 								<a class="btn btn-warning">貸出中</a>
@@ -92,7 +92,7 @@ function RentalCheck (purchaseId, bookTitle) {
 	let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `book/${purchaseId}/rental`
+		window.location.href = `/book/${purchaseId}/rental`
 	}
 }
 
@@ -100,7 +100,7 @@ function ReturnCheck (purchaseId, bookTitle) {
 	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `book/${purchaseId}/return`
+		window.location.href = `/book/${purchaseId}/return`
 	}
 }
 </script>
