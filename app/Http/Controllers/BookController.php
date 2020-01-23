@@ -192,9 +192,9 @@ class BookController extends Controller
 		$rentals = $this->rental->getRentaledUsersAndCount($purchaseId);
 
 		// 貸出中かどうか
-		$isRental = $this->rental->is_rental($purchase->id);
+		$isRentalUserArr = $this->rental->isRentalUser($purchase->id);
 
-		return view('book.detail', compact('purchase', 'book', 'publisher', 'rentals', 'isRental', 'categories', 'authors'));
+		return view('book.detail', compact('purchase', 'book', 'publisher', 'rentals', 'isRentalUserArr', 'categories', 'authors'));
 	}
 
 	/**

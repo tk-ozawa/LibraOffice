@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.master')
 
 @section('title')
 注文依頼承諾確認
