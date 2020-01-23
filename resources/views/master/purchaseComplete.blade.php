@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.master')
 
 @section('title')
 発注完了申請確認
