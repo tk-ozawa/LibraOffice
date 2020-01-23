@@ -35,10 +35,22 @@ class UserService
 	 * @param string $email
 	 * @return User
 	 */
-	public function findByEmail(string $email)
+	public function findByEmail(string $email): User
 	{
 		return $this->user->where('email', $email)->first();
 	}
+
+	/**
+	 * IDによるユーザー情報取得
+	 *
+	 * @param int $userId
+	 * @return User
+	 */
+	public function findById(int $userId): User
+	{
+		return $this->user->where('id', $userId)->first();
+	}
+
 
 	/**
 	 * ログインチェック
