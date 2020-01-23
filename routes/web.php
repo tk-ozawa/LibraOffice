@@ -30,6 +30,8 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 
+	Route::get('/user/{userId}', 'UserController@goDetail')->name('user.detail');
+
 	Route::group(['middleware' => ['CheckMasterAuth']], function () {
 		Route::get('/master', 'MasterController@goTop')->name('master.top');
 		Route::get('/master/user/add/input', 'MasterController@goRegister')->name('user.add.input');
