@@ -3,17 +3,20 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Eloquent\Rental;
+use App\Models\Eloquent\User;
 use App\Models\Eloquent\Purchase;
 
 class RentalService
 {
 	private $rental;
 	private $purchase;
+	private $user;
 
-	function __construct(Rental $rental, Purchase $purchase)
+	function __construct(Rental $rental, Purchase $purchase, User $user)
 	{
 		$this->rental = $rental;
 		$this->purchase = $purchase;
+		$this->user = $user;
 	}
 
 	/**
@@ -62,6 +65,29 @@ class RentalService
 				$q->select('books.id', 'books.title');
 			}])
 			->first();
+	}
+
+	/**
+	 * 社内図書IDから借りたことのある全ユーザーと借りた回数を取得する
+	 *
+	 * @param int $purchaseId
+	 * @return array
+	 */
+	public function getRentaledUsersAndCount(int $purchaseId): array
+	{
+		$userRentalCounts = $this->rental
+			->select(DB::raw('COUNT(*) as count, rentals.user_id'))
+			->where('purchase_id', $purchaseId)
+			->groupBy('user_id')
+			->get();
+
+		$retArr = [];
+		foreach ($userRentalCounts as $rental) {
+			$user = $this->user->where('id', $rental->user_id)->first();
+			$retArr[] = ['count' => $rental->count, 'user' => $user];
+		}
+
+		return $retArr;
 	}
 
 	/**

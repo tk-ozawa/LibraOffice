@@ -18,14 +18,12 @@ use App\Models\Database\PublisherProp;
 
 class BookController extends Controller
 {
-	private $request;
 	private $book;
 	private $publisher;
 	private $author;
 	private $category;
 	private $order;
 	private $purchase;
-	private $user;
 	private $rental;
 
 	/**
@@ -33,7 +31,7 @@ class BookController extends Controller
 	 *
 	 * @return void
 	 */
-	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, UserService $user, RentalService $rental)
+	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, RentalService $rental)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
@@ -41,7 +39,6 @@ class BookController extends Controller
 		$this->category = $category;
 		$this->order = $order;
 		$this->purchase = $purchase;
-		$this->user = $user;
 		$this->rental = $rental;
 	}
 
@@ -191,16 +188,13 @@ class BookController extends Controller
 		$categories = $book->categories;
 		$authors = $book->authors;
 
-		// 借りたことのあるユーザー一覧
-		$users = [];
-		foreach ($purchase->rentals as $rental) {
-			$users[] = $this->user->findById($rental->user_id);
-		}
+		// 借りたことのあるユーザーとその回数を取得
+		$rentals = $this->rental->getRentaledUsersAndCount($purchaseId);
 
 		// 貸出中かどうか
 		$isRental = $this->rental->is_rental($purchase->id);
 
-		return view('book.detail', compact('purchase', 'book', 'publisher', 'users', 'isRental', 'categories', 'authors'));
+		return view('book.detail', compact('purchase', 'book', 'publisher', 'rentals', 'isRental', 'categories', 'authors'));
 	}
 
 	/**
