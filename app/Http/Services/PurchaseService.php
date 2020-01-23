@@ -9,6 +9,7 @@ use App\Models\Eloquent\User;
 use App\Models\Eloquent\Publisher;
 use App\Models\Eloquent\Rental;
 use App\Models\Database\BookProp;
+use App\Services\RentalService;
 use App\Services\OrderService;
 use Carbon\Carbon;
 
@@ -20,8 +21,9 @@ class PurchaseService
 	private $orderService;
 	private $user;
 	private $rental;
+	private $rentalService;
 
-	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, OrderService $orderService, Rental $rental)
+	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, OrderService $orderService, Rental $rental, RentalService $rentalService)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
@@ -29,6 +31,7 @@ class PurchaseService
 		$this->user = $user;
 		$this->orderService = $orderService;
 		$this->rental = $rental;
+		$this->rentalService = $rentalService;
 	}
 
 	/**
@@ -124,19 +127,11 @@ class PurchaseService
 			}])
 			->first();
 
-			$isRental = $this->rental
-				->where('purchase_id', $purchase->id)
-				->where('status', 0)
-				->exists();
-
-			$rentalUser = $this->rental
-				->where('purchase_id', $purchase->id)
-				->where('status', 0)
-				->first();
+			$isRentalUserArr = $this->rentalService->isRentalUser($purchase->id);
 
 			$bookProp = new BookProp($bookDB->toArray());
 			$bookProp->publisher_name = $this->publisher->where('id', $bookDB->publisher_id)->first()->name;
-			$purProps[] = ['book' => $bookProp, 'purchase' => $purchase, 'isRental' => $isRental, 'rentalUser' => $rentalUser];
+			$purProps[] = ['book' => $bookProp, 'purchase' => $purchase, 'isRental' => $isRentalUserArr['flg'], 'rentalUserId' => $isRentalUserArr['userId']];
 		}
 
 		return $purProps;

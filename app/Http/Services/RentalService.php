@@ -91,16 +91,27 @@ class RentalService
 	}
 
 	/**
-	 * 貸出中かどうかチェック
+	 * 貸出中かどうかチェック+貸出中のユーザーIDを取得
 	 *
 	 * @param int $purchaseId
-	 * @return bool
+	 * @return array
 	 */
-	public function is_rental(int $purchaseId)
+	public function isRentalUser(int $purchaseId): array
 	{
-		return $this->rental
+		$isRental = $this->rental
 			->where('purchase_id', $purchaseId)
 			->where('status', 0)
 			->exists();
+
+		$rentalUserId = 0;
+
+		if ($isRental) {
+			$rentalUserId = $this->rental
+				->where('purchase_id', $purchaseId)
+				->where('status', 0)
+				->first()->user_id;
+		}
+
+		return ['flg' => $isRental, 'userId' => $rentalUserId];
 	}
 }
