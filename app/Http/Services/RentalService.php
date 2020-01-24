@@ -114,4 +114,47 @@ class RentalService
 
 		return ['flg' => $isRental, 'userId' => $rentalUserId];
 	}
+
+	/**
+	 * ユーザーIDから貸出中リストを取得する
+	 *
+	 * @param int $userId
+	 * @return array{Rental}
+	 */
+	public function getRentals(int $userId)
+	{
+		return $this->rental
+			->where('user_id', $userId)
+			->where('status', 0)	// 0:貸出中
+			->with(['purchases' => function ($q) {
+				$q->select('purchases.id', 'purchases.book_id', 'purchases.purchase_date')
+					->with(['books' => function ($q) {
+						$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+							->with(['categories' => function ($q) {
+								$q->select('categories.id', 'categories.name');
+							}])
+							->with(['authors' => function ($q) {
+								$q->select('authors.id', 'authors.name');
+							}])
+							->with(['publishers' => function ($q) {
+								$q->select('publishers.id', 'publishers.name');
+							}]);
+					}]);
+			}])
+			->get();
+	}
+
+	/**
+	 * ユーザーIDから貸出中の書籍の件数を取得する
+	 *
+	 * @param int $userId
+	 * @return int
+	 */
+	public function rentalsCount(int $userId)
+	{
+		return $this->rental
+			->where('user_id', $userId)
+			->where('status', 0)	// 貸出中
+			->count('id');
+	}
 }
