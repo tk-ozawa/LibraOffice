@@ -71,7 +71,7 @@ class BookController extends Controller
 		}
 
 		// 出版社情報取得
-		$publisher = $this->publisher->getByID($book->publisher_id);
+		$publisher = $this->publisher->findById($book->publisher_id);
 
 		$book->edition = $input['edition'];
 
@@ -236,7 +236,7 @@ class BookController extends Controller
 	}
 
 	/**
-	 * タイトル検索画面表示処理
+	 * タイトルによる書籍検索結果画面表示処理
 	 */
 	public function findTitle(Request $request)
 	{
@@ -246,11 +246,32 @@ class BookController extends Controller
 		$hitPurchases = $this->purchase->findByKeyword($keyword);
 
 		if (!$hitPurchases) {
-			return view('book.find.notfound', compact('keyword'));
+			$valiMsg = "タイトルに{$keyword}を含む書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
 		}
 
 		$hitCount = count($hitPurchases);
 
 		return view('book.find.title', compact('keyword', 'hitPurchases', 'hitCount'));
+	}
+
+	/**
+	 * 出版社IDによる書籍検索結果画面表示処理
+	 */
+	public function findByPublisherId(Request $request, int $publisherId)
+	{
+		$publisher = $this->publisher->findById($publisherId);
+
+		$hitPurchases = $this->purchase->findByPublisherId($publisherId);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "\"{$publisher->name}\"が出版している書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		// dd($hitPurchases);
+		return view('book.find.publisher', compact('hitPurchases', 'hitCount', 'publisher'));
 	}
 }
