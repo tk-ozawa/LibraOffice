@@ -1,14 +1,13 @@
 @extends('layouts.book')
 
 @section('title')
-カテゴリでの検索:"{{ $category->name }}"
+著者での検索:"{{ $author->name }}"
 @endsection
 
 @section('body')
-<h1>"{{ $category->name }}"で検索</h1>
+<h1>"{{ $author->name }}"で検索</h1>
 <p>{{ $hitCount }}件ヒットしました。</p>
 
-@if($hitPurchases)
 <div class="table-responsive">
 	<table class="table text-nowrap">
 		<thead>
@@ -56,7 +55,4 @@
 		</tbody>
 	</table>
 </div>
-@else
-<p>登録されている社内図書は現在ありません。</p>
-@endif
 @endsection
