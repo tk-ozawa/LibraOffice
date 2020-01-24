@@ -7,6 +7,7 @@
 	<title>@yield('title')</title>
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<script src="{{ asset('js/app.js') }}" defer></script>
+	@yield('tplHead')
 	@yield('head')
 </head>
 <body>
@@ -21,8 +22,8 @@
 			<ul class="navbar-nav mr-auto">
 				@yield('navItem')
 			</ul>
-			<form class="form-inline my-2 my-lg-0">
-				<input type="search" class="form-control mr-sm-2" placeholder="本のタイトル…" aria-label="本のタイトル…">
+			<form class="form-inline my-2 my-lg-0" action="{{ route('book.find.title') }}" method="GET">
+				<input type="search" name="keyword" class="form-control mr-sm-2" placeholder="本のタイトル…" aria-label="本のタイトル…">
 				<button type="submit" class="btn btn-outline-success my-2 my-sm-0">検索</button>
 			</form>
 		</div>

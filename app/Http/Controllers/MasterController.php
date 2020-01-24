@@ -7,6 +7,7 @@ use App\Services\UserService;
 use App\Services\BookService;
 use App\Services\OrderService;
 use App\Services\PurchaseService;
+use App\Services\RentalService;
 use App\Models\Database\UserProp;
 
 class MasterController extends Controller
@@ -15,18 +16,20 @@ class MasterController extends Controller
 	private $book;
 	private $order;
 	private $purchase;
+	private $rental;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, BookService $book, OrderService $order, PurchaseService $purchase)
+	function __construct(UserService $user, BookService $book, OrderService $order, PurchaseService $purchase, RentalService $rental)
 	{
 		$this->user = $user;
 		$this->book = $book;
 		$this->order = $order;
 		$this->purchase = $purchase;
+		$this->rental = $rental;
 	}
 
 	/**
@@ -69,25 +72,25 @@ class MasterController extends Controller
 	 */
 	public function goTop(Request $request)
 	{
-		/*
-			"email" => "test@test.com"
-			"id" => 2
-			"auth" => 0
-			"flashMsg" => "ログインしました。"
-			"office_id" => 1
-		 */
+		$session = $request->session()->all();
+
+		// 貸出中 - rentalsリスト取得
+		$rentals = $this->rental->getRentals($session['id']);
+		$rentalsCount = $this->rental->rentalsCount($session['id']);
 
 		// 注文依頼 - ordersリスト取得
 		$requests = $this->order->getRequests();
+		$requestsCount = $this->order->requestsCount();
 
 		// 社内図書 - purchasesリスト取得
 		// 発注中のリスト取得
 		$orderings = $this->purchase->getOrderings();
+		$orderingsCount = $this->purchase->orderingsCount();
 
 		// 所持済みのリスト取得
 		$purchases = $this->purchase->getPurchases();
 
-		return view('master.top', compact('requests', 'orderings', 'purchases'));
+		return view('master.top', compact('rentals', 'rentalsCount', 'requests', 'requestsCount', 'orderings', 'purchases', 'orderingsCount'));
 	}
 
 	/**
