@@ -144,7 +144,7 @@ class BookController extends Controller
 		$bookDB->categories()->sync($this->category->firstOrCreate(explode(',', $bookProp->categories)));
 
 		// 著者取得
-		$authorsDB = $this->author->getByBookId($bookDB->id);
+		$authorsDB = $this->author->findById($bookDB->id);
 		$authorsProp = [];
 
 		foreach ($authorsDB as $authorDB) {	// 配列 -> obj
@@ -157,7 +157,7 @@ class BookController extends Controller
 		$bookProp->authors = $authorsProp;
 
 		// カテゴリ取得
-		$categoriesDB = $this->category->getByBookId($bookDB->id);
+		$categoriesDB = $this->category->findById($bookDB->id);
 		$categoriesProp = [];
 
 		foreach ($categoriesDB as $categoryDB) {	// 配列 -> obj
@@ -252,5 +252,13 @@ class BookController extends Controller
 		$hitCount = count($hitPurchases);
 
 		return view('book.find.title', compact('keyword', 'hitPurchases', 'hitCount'));
+	}
+
+	/**
+	 * カテゴリーIDによる書籍検索結果画面表示処理
+	 */
+	public function findByCategoryId(Request $request, int $categoryId)
+	{
+		$category = $this->category->findById($categoryId);
 	}
 }
