@@ -25,7 +25,7 @@
 			<th>カテゴリ</th>
 			<td>
 				@foreach ($categories as $category)
-					{{ $category->id }}:{{ $category->name }}
+					<a href="{{ route('book.find.category', ['categoryName' => $category->name]) }}">{{ $category->name }}</a>
 					@if(!$loop->last),@endif
 				@endforeach
 			</td>

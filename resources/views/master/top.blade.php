@@ -40,7 +40,7 @@
 						<td>{{ $book->price }}円</td>
 						<td>
 							@foreach ($book->categories as $category)
-							{{ $category['name'] }}
+							<a href="{{ route('book.find.category', ['categoryName' => $category['name']]) }}">{{ $category['name'] }}</a>
 							@if(!$loop->last),@endif
 							@endforeach
 						</td>
@@ -90,7 +90,7 @@
 						<td>{{ $book->price }}円</td>
 						<td class="cat-col">
 							@foreach ($book->categories as $category)
-								{{ $category['name'] }}
+								<a href="{{ route('book.find.category', ['categoryName' => $category['name']]) }}">{{ $category['name'] }}</a>
 								@if(!$loop->last),@endif
 							@endforeach
 						</td>
