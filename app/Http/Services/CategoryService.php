@@ -29,7 +29,7 @@ class CategoryService
 	{
 		$regCategories = [];
 		foreach ($categories as $category) {
-			$result = $this->category->firstOrCreate(['name' => $category]);
+			$result = $this->category->firstOrCreate(['name' => trim($category)]);
 			$regCategories[] = json_decode(json_encode($result), true)['id'];
 		}
 		return $regCategories;
