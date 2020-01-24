@@ -29,7 +29,7 @@ class CategoryService
 	{
 		$regCategories = [];
 		foreach ($categories as $category) {
-			$result = $this->category->firstOrCreate(['name' => $category]);
+			$result = $this->category->firstOrCreate(['name' => trim($category)]);
 			$regCategories[] = json_decode(json_encode($result), true)['id'];
 		}
 		return $regCategories;
@@ -39,9 +39,9 @@ class CategoryService
 	 * 書籍IDからカテゴリ情報を取得
 	 *
 	 * @param int $bookId
-	 * @return Collection
+	 * @return Category
 	 */
-	public function findByBookId(int $bookId): Collection
+	public function findByBookId(int $bookId)
 	{
 		$query = $this->book
 			->where('id', $bookId)
