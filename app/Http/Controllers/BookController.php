@@ -144,7 +144,7 @@ class BookController extends Controller
 		$bookDB->categories()->sync($this->category->firstOrCreate(explode(',', $bookProp->categories)));
 
 		// 著者取得
-		$authorsDB = $this->author->getByBookId($bookDB->id);
+		$authorsDB = $this->author->findById($bookDB->id);
 		$authorsProp = [];
 
 		foreach ($authorsDB as $authorDB) {	// 配列 -> obj
@@ -157,7 +157,7 @@ class BookController extends Controller
 		$bookProp->authors = $authorsProp;
 
 		// カテゴリ取得
-		$categoriesDB = $this->category->getByBookId($bookDB->id);
+		$categoriesDB = $this->category->findByBookId($bookDB->id);
 		$categoriesProp = [];
 
 		foreach ($categoriesDB as $categoryDB) {	// 配列 -> obj
@@ -256,6 +256,25 @@ class BookController extends Controller
 	}
 
 	/**
+	 * カテゴリー名による書籍検索結果画面表示処理
+	 */
+	public function findByCategoryName(Request $request, string $categoryName)
+	{
+		$category = $this->category->findByName($categoryName);
+
+		$hitPurchases = $this->purchase->findByCategoryId($category->id);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "カテゴリ:\"{$category->name}\"の書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.category', compact('hitPurchases', 'hitCount', 'category'));
+	}
+
+	/**
 	 * 出版社IDによる書籍検索結果画面表示処理
 	 */
 	public function findByPublisherId(Request $request, int $publisherId)
@@ -271,7 +290,6 @@ class BookController extends Controller
 
 		$hitCount = count($hitPurchases);
 
-		// dd($hitPurchases);
 		return view('book.find.publisher', compact('hitPurchases', 'hitCount', 'publisher'));
 	}
 }

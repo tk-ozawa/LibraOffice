@@ -50,7 +50,7 @@
 						<td><a href="{{ route('book.detail', ['purchaseId' => $ren->purchase_id]) }}">{{ $book->title }} 第{{ $book->edition }}版</a></td>
 						<td class="cat-col">
 							@foreach ($book->categories as $category)
-								{{ $category['name'] }}
+								<a href="{{ route('book.find.category', ['categoryName' => $category['name']]) }}">{{ $category['name'] }}</a>
 								@if(!$loop->last),@endif
 							@endforeach
 						</td>
@@ -104,7 +104,7 @@
 					<td><a href="{{ route('book.detail', ['purchaseId' => $purchase['purchase']->id]) }}">{{ $book->title }} 第{{ $book->edition }}版</a></td>
 					<td class="cat-col">
 						@foreach ($book->categories as $category)
-							{{ $category['name'] }}
+							<a href="{{ route('book.find.category', ['categoryName' => $category['name']]) }}">{{ $category['name'] }}</a>
 							@if(!$loop->last),@endif
 						@endforeach
 					</td>

@@ -40,7 +40,7 @@ class AuthorService
 	 * @param int $bookId
 	 * @return array
 	 */
-	public function getByBookId(int $bookId)
+	public function findById(int $bookId)
 	{
 		$query = $this->book
 			->where('id', $bookId)
