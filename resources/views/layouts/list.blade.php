@@ -117,22 +117,4 @@
 @else
 <p>登録されている社内図書は現在ありません。</p>
 @endif
-
-<script>
-function RentalCheck (purchaseId, bookTitle) {
-	let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
-	if ( res == true ) {
-		// OKなら移動
-		window.location.href = `/book/${purchaseId}/rental`
-	}
-}
-
-function ReturnCheck (purchaseId, bookTitle) {
-	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
-	if ( res == true ) {
-		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
-	}
-}
-</script>
 @endsection

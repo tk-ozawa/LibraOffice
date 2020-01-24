@@ -146,7 +146,7 @@ class BookController extends Controller
 		$bookDB->categories()->sync($this->category->firstOrCreate(explode(',', $bookProp->categories)));
 
 		// 著者取得
-		$authorsDB = $this->author->findById($bookDB->id);
+		$authorsDB = $this->author->findByBookId($bookDB->id);
 		$authorsProp = [];
 
 		foreach ($authorsDB as $authorDB) {	// 配列 -> obj
@@ -293,6 +293,25 @@ class BookController extends Controller
 		$hitCount = count($hitPurchases);
 
 		return view('book.find.publisher', compact('hitPurchases', 'hitCount', 'publisher'));
+	}
+
+	/**
+	 * 著者IDによる書籍検索結果画面表示処理
+	 */
+	public function findByAuthorId(Request $request, int $authorId)
+	{
+		$author = $this->author->findById($authorId);
+
+		$hitPurchases = $this->purchase->findByAuthorId($authorId);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "著:\"{$author->name}\"氏の書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.author', compact('hitPurchases', 'hitCount', 'author'));
 	}
 
 	/**

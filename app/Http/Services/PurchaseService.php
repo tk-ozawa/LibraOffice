@@ -8,6 +8,7 @@ use App\Models\Eloquent\Book;
 use App\Models\Eloquent\User;
 use App\Models\Eloquent\Publisher;
 use App\Models\Eloquent\Rental;
+use App\Models\Eloquent\Author;
 use App\Models\Database\BookProp;
 use App\Models\Eloquent\Category;
 use App\Services\RentalService;
@@ -23,14 +24,16 @@ class PurchaseService
 	private $user;
 	private $category;
 	private $rentalService;
+	private $author;
 
-	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, Category $category, OrderService $orderService, RentalService $rentalService)
+	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, Category $category, Author $author, OrderService $orderService, RentalService $rentalService)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
 		$this->purchase = $purchase;
 		$this->user = $user;
 		$this->category = $category;
+		$this->author = $author;
 		$this->orderService = $orderService;
 		$this->rentalService = $rentalService;
 	}
@@ -278,6 +281,53 @@ class PurchaseService
 		foreach ($books as $book) {
 			$purchase = $this->purchase
 				->where('status', 1)	// 所持済
+				->where('book_id', $book->id)
+				->with(['books' => function ($q) {
+					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+						->with(['categories' => function ($q) {
+							$q->select('categories.id', 'categories.name');
+						}])
+						->with(['authors' => function ($q) {
+							$q->select('authors.id', 'authors.name');
+						}])
+						->with(['publishers' => function ($q) {
+							$q->select('publishers.id', 'publishers.name');
+						}]);
+				}])
+				->first();
+
+			$rental = $this->rentalService->isRentalUser($purchase->id);
+
+			$hitPurchases[] = compact('purchase', 'rental');
+		}
+
+		return $hitPurchases;
+	}
+
+	/**
+	 * 著者IDによる書籍一覧の取得
+	 *
+	 * @param int $authorId
+	 * @return array
+	 */
+	public function findByAuthorId(int $authorId)
+	{
+		$booksLinkingAuthor = $this->author
+			->where('id', $authorId)
+			->with(['books' => function ($q) {
+				$q->select('books.id');
+			}])
+			->first();
+
+		$books = $booksLinkingAuthor->books;
+
+		if (!$books) {
+			return null;
+		}
+
+		$hitPurchases = [];
+		foreach ($books as $book) {
+			$purchase = $this->purchase
 				->where('book_id', $book->id)
 				->with(['books' => function ($q) {
 					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')

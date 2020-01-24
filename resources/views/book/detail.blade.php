@@ -38,7 +38,7 @@
 			<th>著者</th>
 			<td>
 				@foreach ($authors as $author)
-					{{ $author->id }}:{{ $author->name }}
+					<a href="{{ route('book.find.author', ['authorId' => $author->id]) }}">{{ $author->name }}</a>
 					@if(!$loop->last),@endif
 				@endforeach
 			</td>
@@ -71,14 +71,4 @@
 		<button type="submit" class="btn btn-success">借りて読む</button>
 </form>
 @endif
-
-<script>
-function ReturnCheck (purchaseId, bookTitle) {
-	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
-	if ( res == true ) {
-		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
-	}
-}
-</script>
 @endsection
