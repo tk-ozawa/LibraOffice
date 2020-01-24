@@ -25,7 +25,7 @@
 			<th>カテゴリ</th>
 			<td>
 				@foreach ($categories as $category)
-					{{ $category->id }}:{{ $category->name }}
+					<a href="{{ route('book.find.category', ['categoryName' => $category->name]) }}">{{ $category->name }}</a>
 					@if(!$loop->last),@endif
 				@endforeach
 			</td>
@@ -38,20 +38,20 @@
 			<th>著者</th>
 			<td>
 				@foreach ($authors as $author)
-					{{ $author->id }}:{{ $author->name }}
+					<a href="{{ route('book.find.author', ['authorId' => $author->id]) }}">{{ $author->name }}</a>
 					@if(!$loop->last),@endif
 				@endforeach
 			</td>
 		</tr>
 		<tr>
 			<th>出版社</th>
-			<td>{{ $publisher->name }}</td>
+			<td><a href="{{ route('book.find.publisher', ['publisherId' => $publisher->id]) }}">{{ $publisher->name }}</a></td>
 		</tr>
 		<tr>
 			<th>読んだことがある人:借りた回数</th>
 			<td>
 				@foreach ($rentals as $rental)
-					<a href="{{ route('user.detail', ['userId' => $rental['user']->id]) }}">{{ $rental['user']->name }}</a>
+					<a href="{{ route('book.find.user', ['userId' => $rental['user']->id]) }}">{{ $rental['user']->name }}</a>
 					{{ $rental['count'] }}回
 					@if(!$loop->last),@endif
 				@endforeach
@@ -71,14 +71,4 @@
 		<button type="submit" class="btn btn-success">借りて読む</button>
 </form>
 @endif
-
-<script>
-function ReturnCheck (purchaseId, bookTitle) {
-	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
-	if ( res == true ) {
-		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
-	}
-}
-</script>
 @endsection

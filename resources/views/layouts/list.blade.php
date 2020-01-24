@@ -50,7 +50,7 @@
 						<td><a href="{{ route('book.detail', ['purchaseId' => $ren->purchase_id]) }}">{{ $book->title }} 第{{ $book->edition }}版</a></td>
 						<td class="cat-col">
 							@foreach ($book->categories as $category)
-								{{ $category['name'] }}
+								<a href="{{ route('book.find.category', ['categoryName' => $category['name']]) }}">{{ $category['name'] }}</a>
 								@if(!$loop->last),@endif
 							@endforeach
 						</td>
@@ -63,8 +63,8 @@
 		</div>
 	</div>
 	@else
-	<h2>注文依頼リスト</h2>
-	<p>注文依頼は現在ありません。</p>
+	<h2>貸出中リスト</h2>
+	<p>貸出中の書籍は現在ありません。</p>
 	@endif
 </div>
 
@@ -104,7 +104,7 @@
 					<td><a href="{{ route('book.detail', ['purchaseId' => $purchase['purchase']->id]) }}">{{ $book->title }} 第{{ $book->edition }}版</a></td>
 					<td class="cat-col">
 						@foreach ($book->categories as $category)
-							{{ $category['name'] }}
+							<a href="{{ route('book.find.category', ['categoryName' => $category['name']]) }}">{{ $category['name'] }}</a>
 							@if(!$loop->last),@endif
 						@endforeach
 					</td>
@@ -117,22 +117,4 @@
 @else
 <p>登録されている社内図書は現在ありません。</p>
 @endif
-
-<script>
-function RentalCheck (purchaseId, bookTitle) {
-	let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
-	if ( res == true ) {
-		// OKなら移動
-		window.location.href = `/book/${purchaseId}/rental`
-	}
-}
-
-function ReturnCheck (purchaseId, bookTitle) {
-	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
-	if ( res == true ) {
-		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
-	}
-}
-</script>
 @endsection

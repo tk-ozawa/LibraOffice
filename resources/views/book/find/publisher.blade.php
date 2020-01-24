@@ -1,11 +1,11 @@
 @extends('layouts.book')
 
 @section('title')
-タイトルLIKE検索:"{{ $keyword }}"
+出版社での検索:"{{ $publisher->name }}"
 @endsection
 
 @section('body')
-<h1>"{{ $keyword }}"で検索</h1>
+<h1>"{{ $publisher->name }}"で検索</h1>
 <p>{{ $hitCount }}件ヒットしました。</p>
 
 @if($hitPurchases)
@@ -22,13 +22,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach($hitPurchases as $purchase)
-				@php $book = $purchase->books; @endphp
+			@foreach($hitPurchases as $record)
+				@php
+					$purchase = $record['purchase'];
+					$book = $purchase->books;
+				@endphp
 				<tr>
 					<th scope="row" class="index-col">{{ $loop->iteration }}</th scope="row">
 					<td class="btn-col">
-						@if ($purchase['isRental'])
-							@if ($purchase['rentalUserId'] === session('id'))
+						@if ($record['rental']['flg'])
+							@if ($record['rental']['userId'] === session('id'))
 								<button class="btn btn-danger" onclick="ReturnCheck({{ $purchase->id }}, '{{ $book->title }}');">返却する</button>
 							@else
 								<a class="btn btn-warning">貸出中</a>
@@ -43,7 +46,7 @@
 							第{{ $book->edition }}版</a></td>
 					<td class="cat-col">
 						@foreach ($book->categories as $category)
-							<a href="{{ route('book.find.category', ['categoryName' => $category->name]) }}">{{ $category->name }}</a>
+							{{ $category->name }}
 							@if(!$loop->last),@endif
 						@endforeach
 					</td>

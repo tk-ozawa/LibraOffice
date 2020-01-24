@@ -29,19 +29,19 @@ class CategoryService
 	{
 		$regCategories = [];
 		foreach ($categories as $category) {
-			$result = $this->category->firstOrCreate(['name' => $category]);
+			$result = $this->category->firstOrCreate(['name' => trim($category)]);
 			$regCategories[] = json_decode(json_encode($result), true)['id'];
 		}
 		return $regCategories;
 	}
 
 	/**
-	 * 書籍IDから著者情報を取得
+	 * 書籍IDからカテゴリ情報を取得
 	 *
 	 * @param int $bookId
-	 * @return array
+	 * @return Category
 	 */
-	public function getByBookId(int $bookId)
+	public function findByBookId(int $bookId)
 	{
 		$query = $this->book
 			->where('id', $bookId)
@@ -50,5 +50,16 @@ class CategoryService
 			}]);
 
 		return $query->first()->categories;
+	}
+
+	/**
+	 * IDからカテゴリ情報を取得
+	 *
+	 * @param string $catName
+	 * @return Category
+	 */
+	public function findByName(string $catName): Category
+	{
+		return $this->category->where('name', $catName)->first();
 	}
 }

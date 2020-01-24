@@ -15,8 +15,8 @@ class Category extends Model
 	public function books()
 	{
 		// 多対多
-		return $this->belognsToMany(
-			'App\Models\Eloquent\Book'                      // 参照先テーブルモデル
+		return $this->belongsToMany(
+			'App\Models\Eloquent\Book'		// 参照先テーブルモデル
 			, 'book_category_relationships' // 中間テーブルのテーブル名
 			, 'category_id'                 // 中間テーブルの参照元外部キー
 			, 'book_id'                     // 中間テーブルの参照先外部キー

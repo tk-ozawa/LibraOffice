@@ -40,7 +40,7 @@ class AuthorService
 	 * @param int $bookId
 	 * @return array
 	 */
-	public function getByBookId(int $bookId)
+	public function findByBookId(int $bookId)
 	{
 		$query = $this->book
 			->where('id', $bookId)
@@ -49,5 +49,16 @@ class AuthorService
 			}]);
 
 		return $query->first()->authors;
+	}
+
+	/**
+	 * IDから著者情報を取得
+	 *
+	 * @param int $authorId
+	 * @return Author
+	 */
+	public function findById(int $authorId)
+	{
+		return $this->author->where('id', $authorId)->first();
 	}
 }

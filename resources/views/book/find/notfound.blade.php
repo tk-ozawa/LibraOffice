@@ -6,7 +6,7 @@ Not Found
 
 @section('body')
 <h1>Not Found</h1>
-<p>タイトルに"{{ $keyword }}"を含む書籍はありませんでした。</p>
+<p>{{ $valiMsg }}</p>
 
 <form class="form-inline my-2" action="{{ route('book.find.title') }}" method="GET">
 	検索しますか？

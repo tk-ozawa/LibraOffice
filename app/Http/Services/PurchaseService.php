@@ -8,7 +8,9 @@ use App\Models\Eloquent\Book;
 use App\Models\Eloquent\User;
 use App\Models\Eloquent\Publisher;
 use App\Models\Eloquent\Rental;
+use App\Models\Eloquent\Author;
 use App\Models\Database\BookProp;
+use App\Models\Eloquent\Category;
 use App\Services\RentalService;
 use App\Services\OrderService;
 use Carbon\Carbon;
@@ -20,17 +22,19 @@ class PurchaseService
 	private $purchase;
 	private $orderService;
 	private $user;
-	private $rental;
+	private $category;
 	private $rentalService;
+	private $author;
 
-	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, OrderService $orderService, Rental $rental, RentalService $rentalService)
+	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, Category $category, Author $author, OrderService $orderService, RentalService $rentalService)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
 		$this->purchase = $purchase;
 		$this->user = $user;
+		$this->category = $category;
+		$this->author = $author;
 		$this->orderService = $orderService;
-		$this->rental = $rental;
 		$this->rentalService = $rentalService;
 	}
 
@@ -176,6 +180,53 @@ class PurchaseService
 	}
 
 	/**
+	 * カテゴリIDによる書籍一覧の取得
+	 *
+	 * @param int $categoryId
+	 * @return array
+	 */
+	public function findByCategoryId(int $categoryId)
+	{
+		$booksLinkingCate = $this->category
+			->where('id', $categoryId)
+			->with(['books' => function ($q) {
+				$q->select('books.id');
+			}])
+			->first();
+
+		$books = $booksLinkingCate->books;
+
+		if (!$books) {
+			return null;
+		}
+
+		$hitPurchases = [];
+		foreach ($books as $book) {
+			$purchase = $this->purchase
+				->where('book_id', $book->id)
+				->with(['books' => function ($q) {
+					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+						->with(['categories' => function ($q) {
+							$q->select('categories.id', 'categories.name');
+						}])
+						->with(['authors' => function ($q) {
+							$q->select('authors.id', 'authors.name');
+						}])
+						->with(['publishers' => function ($q) {
+							$q->select('publishers.id', 'publishers.name');
+						}]);
+				}])
+				->first();
+
+			$rental = $this->rentalService->isRentalUser($purchase->id);
+
+			$hitPurchases[] = compact('purchase', 'rental');
+		}
+
+		return $hitPurchases;
+	}
+
+	/**
 	 * IDによる社内図書情報取得
 	 *
 	 * @param int $purchaseId
@@ -204,6 +255,7 @@ class PurchaseService
 
 	/**
 	 * 発注中の書籍の件数を取得する
+	 *
 	 * @return int
 	 */
 	public function orderingsCount()
@@ -211,5 +263,91 @@ class PurchaseService
 		return $this->purchase
 			->where('status', 0)
 			->count('id');
+	}
+
+	/**
+	 * 出版社IDによる書籍一覧の取得
+	 *
+	 * @param int $publisherId
+	 * @return array
+	 */
+	public function findByPublisherId(int $publisherId)
+	{
+		$books = $this->book
+			->where('publisher_id', $publisherId)
+			->get();
+
+		$hitPurchases = [];
+		foreach ($books as $book) {
+			$purchase = $this->purchase
+				->where('status', 1)	// 所持済
+				->where('book_id', $book->id)
+				->with(['books' => function ($q) {
+					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+						->with(['categories' => function ($q) {
+							$q->select('categories.id', 'categories.name');
+						}])
+						->with(['authors' => function ($q) {
+							$q->select('authors.id', 'authors.name');
+						}])
+						->with(['publishers' => function ($q) {
+							$q->select('publishers.id', 'publishers.name');
+						}]);
+				}])
+				->first();
+
+			$rental = $this->rentalService->isRentalUser($purchase->id);
+
+			$hitPurchases[] = compact('purchase', 'rental');
+		}
+
+		return $hitPurchases;
+	}
+
+	/**
+	 * 著者IDによる書籍一覧の取得
+	 *
+	 * @param int $authorId
+	 * @return array
+	 */
+	public function findByAuthorId(int $authorId)
+	{
+		$booksLinkingAuthor = $this->author
+			->where('id', $authorId)
+			->with(['books' => function ($q) {
+				$q->select('books.id');
+			}])
+			->first();
+
+		$books = $booksLinkingAuthor->books;
+
+		if (!$books) {
+			return null;
+		}
+
+		$hitPurchases = [];
+		foreach ($books as $book) {
+			$purchase = $this->purchase
+				->where('book_id', $book->id)
+				->with(['books' => function ($q) {
+					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+						->with(['categories' => function ($q) {
+							$q->select('categories.id', 'categories.name');
+						}])
+						->with(['authors' => function ($q) {
+							$q->select('authors.id', 'authors.name');
+						}])
+						->with(['publishers' => function ($q) {
+							$q->select('publishers.id', 'publishers.name');
+						}]);
+				}])
+				->first();
+
+			$rental = $this->rentalService->isRentalUser($purchase->id);
+
+			$hitPurchases[] = compact('purchase', 'rental');
+		}
+
+		return $hitPurchases;
 	}
 }

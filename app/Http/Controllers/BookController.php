@@ -25,13 +25,14 @@ class BookController extends Controller
 	private $order;
 	private $purchase;
 	private $rental;
+	private $user;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, RentalService $rental)
+	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, RentalService $rental, UserService $user)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
@@ -40,6 +41,7 @@ class BookController extends Controller
 		$this->order = $order;
 		$this->purchase = $purchase;
 		$this->rental = $rental;
+		$this->user = $user;
 	}
 
 	/**
@@ -71,7 +73,7 @@ class BookController extends Controller
 		}
 
 		// 出版社情報取得
-		$publisher = $this->publisher->getByID($book->publisher_id);
+		$publisher = $this->publisher->findById($book->publisher_id);
 
 		$book->edition = $input['edition'];
 
@@ -144,7 +146,7 @@ class BookController extends Controller
 		$bookDB->categories()->sync($this->category->firstOrCreate(explode(',', $bookProp->categories)));
 
 		// 著者取得
-		$authorsDB = $this->author->getByBookId($bookDB->id);
+		$authorsDB = $this->author->findByBookId($bookDB->id);
 		$authorsProp = [];
 
 		foreach ($authorsDB as $authorDB) {	// 配列 -> obj
@@ -157,7 +159,7 @@ class BookController extends Controller
 		$bookProp->authors = $authorsProp;
 
 		// カテゴリ取得
-		$categoriesDB = $this->category->getByBookId($bookDB->id);
+		$categoriesDB = $this->category->findByBookId($bookDB->id);
 		$categoriesProp = [];
 
 		foreach ($categoriesDB as $categoryDB) {	// 配列 -> obj
@@ -236,7 +238,7 @@ class BookController extends Controller
 	}
 
 	/**
-	 * タイトル検索画面表示処理
+	 * タイトルによる書籍検索結果画面表示処理
 	 */
 	public function findTitle(Request $request)
 	{
@@ -246,11 +248,88 @@ class BookController extends Controller
 		$hitPurchases = $this->purchase->findByKeyword($keyword);
 
 		if (!$hitPurchases) {
-			return view('book.find.notfound', compact('keyword'));
+			$valiMsg = "タイトルに{$keyword}を含む書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
 		}
 
 		$hitCount = count($hitPurchases);
 
 		return view('book.find.title', compact('keyword', 'hitPurchases', 'hitCount'));
+	}
+
+	/**
+	 * カテゴリー名による書籍検索結果画面表示処理
+	 */
+	public function findByCategoryName(Request $request, string $categoryName)
+	{
+		$category = $this->category->findByName($categoryName);
+
+		$hitPurchases = $this->purchase->findByCategoryId($category->id);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "カテゴリ:\"{$category->name}\"の書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.category', compact('hitPurchases', 'hitCount', 'category'));
+	}
+
+	/**
+	 * 出版社IDによる書籍検索結果画面表示処理
+	 */
+	public function findByPublisherId(Request $request, int $publisherId)
+	{
+		$publisher = $this->publisher->findById($publisherId);
+
+		$hitPurchases = $this->purchase->findByPublisherId($publisherId);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "\"{$publisher->name}\"が出版している書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.publisher', compact('hitPurchases', 'hitCount', 'publisher'));
+	}
+
+	/**
+	 * 著者IDによる書籍検索結果画面表示処理
+	 */
+	public function findByAuthorId(Request $request, int $authorId)
+	{
+		$author = $this->author->findById($authorId);
+
+		$hitPurchases = $this->purchase->findByAuthorId($authorId);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "著:\"{$author->name}\"氏の書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.author', compact('hitPurchases', 'hitCount', 'author'));
+	}
+
+	/**
+	 * ユーザーIDによる書籍検索結果画面表示処理
+	 */
+	public function findByUserId(Request $request, int $userId)
+	{
+		$user = $this->user->findById($userId);
+
+		$hitRentals = $this->rental->findByUserId($userId);
+
+		if (!$hitRentals) {	//今のところ通り得ない
+			$valiMsg = "{$user->name}さんが借りた(借りている)書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitRentals);
+
+		return view('book.find.user', compact('hitRentals', 'hitCount', 'user'));
 	}
 }
