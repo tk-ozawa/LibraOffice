@@ -51,7 +51,7 @@
 			<th>読んだことがある人:借りた回数</th>
 			<td>
 				@foreach ($rentals as $rental)
-					<a href="{{ route('user.detail', ['userId' => $rental['user']->id]) }}">{{ $rental['user']->name }}</a>
+					<a href="{{ route('book.find.user', ['userId' => $rental['user']->id]) }}">{{ $rental['user']->name }}</a>
 					{{ $rental['count'] }}回
 					@if(!$loop->last),@endif
 				@endforeach
