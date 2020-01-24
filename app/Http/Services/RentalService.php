@@ -123,6 +123,15 @@ class RentalService
 	 */
 	public function getRentals(int $userId)
 	{
+		$existsRentaling = $this->rental
+			->where('user_id', $userId)
+			->where('status', 0)
+			->exists();
+
+		if (!$existsRentaling) {
+			return null;
+		}
+
 		return $this->rental
 			->where('user_id', $userId)
 			->where('status', 0)	// 0:貸出中
