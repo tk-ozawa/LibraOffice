@@ -32,6 +32,8 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/book/find/category/{categoryName}', 'BookController@findByCategoryName')->name('book.find.category');
 	Route::get('/book/find/publisher/{publisherId}', 'BookController@findByPublisherId')->name('book.find.publisher');
 
+	Route::get('/book/find/author/{authorId}', 'BookController@findByAuthorId')->name('book.find.author');
+
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 
 	Route::get('/user/{userId}', 'UserController@goDetail')->name('user.detail');
