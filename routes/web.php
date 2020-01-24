@@ -28,6 +28,8 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/book/{purchaseId}/rental', 'BookController@rental')->name('book.rental');
 	Route::get('/book/{purchaseId}/return', 'BookController@return')->name('book.return');
 
+	Route::get('/book/find/title', 'BookController@findTitle')->name('book.find.title');
+
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 
 	Route::get('/user/{userId}', 'UserController@goDetail')->name('user.detail');

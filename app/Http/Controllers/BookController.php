@@ -234,4 +234,23 @@ class BookController extends Controller
 
 		return redirect(route('normal.top'))->with('flashMsg', $flashMsg);
 	}
+
+	/**
+	 * タイトル検索画面表示処理
+	 */
+	public function findTitle(Request $request)
+	{
+		$input = $request->all();
+		$keyword = $input['keyword'];
+
+		$hitPurchases = $this->purchase->findByKeyword($keyword);
+
+		if (!$hitPurchases) {
+			return view('book.find.notfound', compact('keyword'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.title', compact('keyword', 'hitPurchases', 'hitCount'));
+	}
 }

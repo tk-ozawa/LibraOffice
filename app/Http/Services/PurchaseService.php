@@ -138,6 +138,44 @@ class PurchaseService
 	}
 
 	/**
+	 * キーワードから本情報を取得する
+	 *
+	 * @param string $keyword
+	 * @return array{Purchase}|null
+	 */
+	public function findByKeyword(string $keyword)
+	{
+		$hitBooks = $this->book
+			->where('title', 'LIKE', "%{$keyword}%")
+			->get();
+
+		if (!$hitBooks) {
+			return null;
+		}
+
+		$hitPurchases = [];
+		foreach ($hitBooks as $book) {
+			$hitPurchases[] = $this->purchase
+				->where('book_id', $book->id)
+				->with(['books' => function ($q) {
+					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+						->with(['categories' => function ($q) {
+							$q->select('categories.id', 'categories.name');
+						}])
+						->with(['authors' => function ($q) {
+							$q->select('authors.id', 'authors.name');
+						}])
+						->with(['publishers' => function ($q) {
+							$q->select('publishers.id', 'publishers.name');
+						}]);
+				}])
+				->first();
+		}
+
+		return $hitPurchases;
+	}
+
+	/**
 	 * IDによる社内図書情報取得
 	 *
 	 * @param int $purchaseId
