@@ -38,7 +38,7 @@
 			<th>著者</th>
 			<td>
 				@foreach ($authors as $author)
-					{{ $author->id }}:{{ $author->name }}
+					<a href="{{ route('book.find.author', ['authorId' => $author->id]) }}">{{ $author->name }}</a>
 					@if(!$loop->last),@endif
 				@endforeach
 			</td>
