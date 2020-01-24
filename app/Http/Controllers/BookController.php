@@ -25,13 +25,14 @@ class BookController extends Controller
 	private $order;
 	private $purchase;
 	private $rental;
+	private $user;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, RentalService $rental)
+	function __construct(BookService $book, PublisherService $publisher, AuthorService $author, CategoryService $category, OrderService $order, PurchaseService $purchase, RentalService $rental, UserService $user)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
@@ -40,6 +41,7 @@ class BookController extends Controller
 		$this->order = $order;
 		$this->purchase = $purchase;
 		$this->rental = $rental;
+		$this->user = $user;
 	}
 
 	/**
@@ -310,5 +312,24 @@ class BookController extends Controller
 		$hitCount = count($hitPurchases);
 
 		return view('book.find.author', compact('hitPurchases', 'hitCount', 'author'));
+	}
+
+	/**
+	 * ユーザーIDによる書籍検索結果画面表示処理
+	 */
+	public function findByUserId(Request $request, int $userId)
+	{
+		$user = $this->user->findById($userId);
+
+		$hitRentals = $this->rental->findByUserId($userId);
+
+		if (!$hitRentals) {	//今のところ通り得ない
+			$valiMsg = "{$user->name}さんが借りた(借りている)書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitRentals);
+
+		return view('book.find.user', compact('hitRentals', 'hitCount', 'user'));
 	}
 }
