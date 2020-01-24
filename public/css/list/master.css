@@ -1,0 +1,10 @@
+#open1_wrapp {
+	border: 5px solid khaki;
+	border-radius: 25px;
+	padding: 10px;
+}
+#open2_wrapp {
+	border: 5px solid red;
+	border-radius: 25px;
+	padding: 10px;
+}
