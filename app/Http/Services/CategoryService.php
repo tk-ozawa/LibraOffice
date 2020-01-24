@@ -39,9 +39,9 @@ class CategoryService
 	 * 書籍IDからカテゴリ情報を取得
 	 *
 	 * @param int $bookId
-	 * @return Collection
+	 * @return Category
 	 */
-	public function findByBookId(int $bookId): Collection
+	public function findByBookId(int $bookId)
 	{
 		$query = $this->book
 			->where('id', $bookId)
