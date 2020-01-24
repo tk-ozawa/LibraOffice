@@ -69,25 +69,19 @@ class MasterController extends Controller
 	 */
 	public function goTop(Request $request)
 	{
-		/*
-			"email" => "test@test.com"
-			"id" => 2
-			"auth" => 0
-			"flashMsg" => "ログインしました。"
-			"office_id" => 1
-		 */
-
 		// 注文依頼 - ordersリスト取得
 		$requests = $this->order->getRequests();
+		$requestsCount = $this->order->requestsCount();
 
 		// 社内図書 - purchasesリスト取得
 		// 発注中のリスト取得
 		$orderings = $this->purchase->getOrderings();
+		$orderingsCount = $this->purchase->orderingsCount();
 
 		// 所持済みのリスト取得
 		$purchases = $this->purchase->getPurchases();
 
-		return view('master.top', compact('requests', 'orderings', 'purchases'));
+		return view('master.top', compact('requests', 'requestsCount', 'orderings', 'purchases', 'orderingsCount'));
 	}
 
 	/**

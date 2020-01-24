@@ -163,4 +163,15 @@ class PurchaseService
 			}])
 			->first();
 	}
+
+	/**
+	 * 発注中の書籍の件数を取得する
+	 * @return int
+	 */
+	public function orderingsCount()
+	{
+		return $this->purchase
+			->where('status', 0)
+			->count('id');
+	}
 }
