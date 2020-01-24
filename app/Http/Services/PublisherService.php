@@ -27,7 +27,7 @@ class PublisherService
 	 * @param int $pubId
 	 * @return
 	 */
-	public function getByID(int $pubId)
+	public function findById(int $pubId)
 	{
 		return $this->publisher->where('id', $pubId)->first();
 	}

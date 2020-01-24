@@ -45,7 +45,7 @@
 		</tr>
 		<tr>
 			<th>出版社</th>
-			<td>{{ $publisher->name }}</td>
+			<td><a href="{{ route('book.find.publisher', ['publisherId' => $publisher->id]) }}">{{ $publisher->name }}</a></td>
 		</tr>
 		<tr>
 			<th>読んだことがある人:借りた回数</th>
