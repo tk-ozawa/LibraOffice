@@ -103,4 +103,16 @@ class OrderService
 			}])
 			->first();
 	}
+
+	/**
+	 * 未承諾な注文依頼の件数を取得する
+	 *
+	 * @return int
+	 */
+	public function requestsCount()
+	{
+		return $this->order
+			->whereNull('approval_user_id')
+			->count('id');
+	}
 }
