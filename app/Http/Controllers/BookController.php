@@ -255,10 +255,21 @@ class BookController extends Controller
 	}
 
 	/**
-	 * カテゴリーIDによる書籍検索結果画面表示処理
+	 * カテゴリー名による書籍検索結果画面表示処理
 	 */
-	public function findByCategoryId(Request $request, int $categoryId)
+	public function findByCategoryName(Request $request, string $categoryName)
 	{
-		$category = $this->category->findById($categoryId);
+		$category = $this->category->findByName($categoryName);
+
+		$hitPurchases = $this->purchase->findByCategoryId($category->id);
+
+		if (!$hitPurchases) {	//今のところ通り得ない
+			$valiMsg = "カテゴリ:\"{$category->name}\"の書籍はありませんでした。";
+			return view('book.find.notfound', compact('valiMsg'));
+		}
+
+		$hitCount = count($hitPurchases);
+
+		return view('book.find.category', compact('hitPurchases', 'hitCount', 'category'));
 	}
 }

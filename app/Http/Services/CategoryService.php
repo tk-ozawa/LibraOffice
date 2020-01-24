@@ -36,7 +36,7 @@ class CategoryService
 	}
 
 	/**
-	 * 書籍IDから著者情報を取得
+	 * 書籍IDからカテゴリ情報を取得
 	 *
 	 * @param int $bookId
 	 * @return Collection
@@ -50,5 +50,16 @@ class CategoryService
 			}]);
 
 		return $query->first()->categories;
+	}
+
+	/**
+	 * IDからカテゴリ情報を取得
+	 *
+	 * @param string $catName
+	 * @return Category
+	 */
+	public function findByName(string $catName): Category
+	{
+		return $this->category->where('name', $catName)->first();
 	}
 }
