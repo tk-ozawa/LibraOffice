@@ -5,32 +5,16 @@
 @endsection
 
 @section('head')
-<style>
-#open1_wrapp {
-	border: 5px solid khaki;
-	border-radius: 25px;
-	padding: 10px;
-}
-#open2_wrapp {
-	border: 5px solid red;
-	border-radius: 25px;
-	padding: 10px;
-}
-.count_text {
-	color: red;
-	font-size: 17px;
-}
-
-</style>
+<link rel="stylesheet" href="{{ asset('css/list/master.css') }}">
 @endsection
 
 @section('otherList')
 <div id="open1_wrapp">
 	@if($requests)
 	<div onclick="obj=document.getElementById('open1').style; obj.display=(obj.display=='none')?'block':'none';">
-		<a style="cursor:pointer;"><h2>注文依頼リスト @if($requestsCount !== 0) <span class="count_text">{{ $requestsCount }}件あります</span> @endif</h2>　▼ クリックで展開</a>
+		<a class="unfoldBtn"><h2>注文依頼リスト @if($requestsCount !== 0) <span class="count_text">{{ $requestsCount }}件あります</span> @endif</h2>　▼ クリックで展開</a>
 	</div>
-	<div id="open1" style="display:none;clear:both;">
+	<div id="open1" class="unfoldBox">
 		<div class="table-responsive">
 			<table class="table text-nowrap">
 				<thead>
@@ -76,9 +60,9 @@
 <div id="open2_wrapp">
 	@if($orderings)
 	<div onclick="obj=document.getElementById('open2').style; obj.display=(obj.display=='none')?'block':'none';">
-		<a style="cursor:pointer;"><h2>社内図書(発注中)リスト @if($orderingsCount !== 0) <span class="count_text">{{ $orderingsCount }}件あります</span> @endif</h2>　▼ クリックで展開</a>
+		<a class="unfoldBtn"><h2>社内図書(発注中)リスト @if($orderingsCount !== 0) <span class="count_text">{{ $orderingsCount }}件あります</span> @endif</h2>　▼ クリックで展開</a>
 	</div>
-	<div id="open2" style="display:none;clear:both;">
+	<div id="open2" class="unfoldBox">
 		<div class="table-responsive">
 			<table class="table text-nowrap">
 				<thead>

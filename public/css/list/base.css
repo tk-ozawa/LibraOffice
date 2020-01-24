@@ -1,0 +1,29 @@
+.count_text {
+	color: red;
+	font-size: 17px;
+}
+
+.index-col {
+	width: 20px;
+}
+.btn-col {
+	width: 90px;
+}
+.img-col {
+	width: 200px;
+}
+.cat-col {
+	overflow-wrap: break-word;
+}
+#open_rentals_wrapp {
+	border: 5px solid blue;
+	border-radius: 25px;
+	padding: 10px;
+}
+.unfoldBtn {
+	cursor: pointer;
+}
+.unfoldBox {
+	display: none;
+	clear: both;
+}
