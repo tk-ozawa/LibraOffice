@@ -157,7 +157,7 @@ class BookController extends Controller
 		$bookProp->authors = $authorsProp;
 
 		// カテゴリ取得
-		$categoriesDB = $this->category->findById($bookDB->id);
+		$categoriesDB = $this->category->findByBookId($bookDB->id);
 		$categoriesProp = [];
 
 		foreach ($categoriesDB as $categoryDB) {	// 配列 -> obj
