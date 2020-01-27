@@ -26,6 +26,14 @@
 				<input type="search" name="keyword" class="form-control mr-sm-2" placeholder="本のタイトル…" aria-label="本のタイトル…">
 				<button type="submit" class="btn btn-outline-success my-2 my-sm-0">検索</button>
 			</form>
+			<ul class="navbar-nav">
+				<li class="nav-item ml-3">
+					<form action="{{ route('logout') }}" method="POST">
+						@csrf
+						<button class="btn btn-danger" type="submit">ログアウト</button>
+					</form>
+				</li>
+			</ul>
 		</div>
 	</nav>
 </header>
