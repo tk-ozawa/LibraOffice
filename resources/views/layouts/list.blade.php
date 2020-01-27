@@ -15,7 +15,7 @@
 
 @section('body')
 @if(session('flashMsg'))
-<div class="alert alert-primary" role="alert">
+<div class="alert alert-success" role="alert">
 	<span>{{ session('flashMsg') }}</span>
 </div>
 @endif
