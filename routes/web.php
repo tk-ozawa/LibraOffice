@@ -15,10 +15,12 @@ Route::get('/foo', function () {
 	return view('welcome');
 });
 
-Route::get('/', 'UserController@goLogin');
-Route::get('/login', 'UserController@login');
+Route::get('/', 'UserController@goLogin')->name('login.form');
+Route::post('/login', 'UserController@login')->name('login');
 
 Route::group(['middleware' => ['CheckRegistered']], function () {
+	Route::post('/logout', 'UserController@logout')->name('logout');
+
 	Route::get('/search', 'BookController@goSearch')->name('search');
 	Route::get('/search/order/input', 'BookController@goOrderByISBN')->name('search.order.input');
 	Route::get('/order/input', 'BookController@goOrder')->name('order.input');
