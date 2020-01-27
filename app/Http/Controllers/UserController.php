@@ -4,23 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
-use App\Services\BookService;
 use App\Models\Database\UserProp;
 
 class UserController extends Controller
 {
 	private $user;
-	private $book;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, BookService $book)
+	function __construct(UserService $user)
 	{
 		$this->user = $user;
-		$this->book = $book;
 	}
 
 	/**
@@ -45,7 +42,7 @@ class UserController extends Controller
 
 		// バリデーションエラー
 		if (($valiMsg = $this->user->loginCheck($loginEmail, $loginPw)) !== null) {
-			return redirect('/')->with('valiMsg', $valiMsg);
+			return redirect(route('login.form'))->with('valiMsg', $valiMsg);
 		}
 
 		// セッション付与
@@ -65,4 +62,12 @@ class UserController extends Controller
 		return redirect(route('normal.top'))->with('flashMsg', 'ログインしました。');
 	}
 
+	/**
+	 * ログアウト処理
+	 */
+	public function logout(Request $request)
+	{
+		$request->session()->flush();
+		return redirect(route('login.form'))->with('flashMsg', 'ログアウトしました。');
+	}
 }
