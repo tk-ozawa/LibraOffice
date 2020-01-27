@@ -53,7 +53,7 @@ class UserService
 
 
 	/**
-	 * ログインチェック
+	 * ログイン処理
 	 *
 	 * @param string $loginEmail
 	 * @param string $loginPw
