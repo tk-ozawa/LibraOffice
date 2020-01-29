@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\RentalService;
 use App\Models\Database\UserProp;
+use App\Models\Eloquent\Rental;
 
 class UserController extends Controller
 {
 	private $user;
+	private $rental;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user)
+	function __construct(UserService $user, RentalService $rental)
 	{
 		$this->user = $user;
+		$this->rental = $rental;
 	}
 
 	/**
@@ -69,5 +73,24 @@ class UserController extends Controller
 	{
 		$request->session()->flush();
 		return redirect(route('login.form'))->with('flashMsg', 'ログアウトしました。');
+	}
+
+	/**
+	 * マイページ表示
+	 */
+	public function goMypage(Request $request)
+	{
+		$session = $request->session()->all();
+
+		// 現在借りている本
+		$rentals = $this->rental->getRentals($session['id']);
+		$rentalsCount = $this->rental->rentalsCount($session['id']);
+
+		// 借りた履歴
+		$rentalsHistory = $this->rental->getHistoryByUserId($session['id']);
+
+		$loginUser = $this->user->findById($session['id']);
+
+		return view('user.mypage', compact('rentals', 'rentalsCount', 'rentalsHistory', 'loginUser'));
 	}
 }
