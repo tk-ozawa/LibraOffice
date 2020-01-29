@@ -22,7 +22,7 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::post('/logout', 'UserController@logout')->name('logout');
 
 	Route::get('/mypage', 'UserController@goMypage')->name('mypage');
-	Route::get('/profile', 'UserController@goProfile')->name('mypage.profile');
+	Route::post('/profile/edit', 'UserController@editProfile')->name('mypage.profile.edit');
 
 	Route::get('/search', 'BookController@goSearch')->name('search');
 	Route::get('/search/order/input', 'BookController@goOrderByISBN')->name('search.order.input');

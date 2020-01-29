@@ -75,9 +75,25 @@
 </div>
 @endif
 
-
 <div class="px-4">
-	<a class="btn btn-primary btn-block my-4" href="{{ route('mypage.profile') }}">プロフィール編集</a>
+	<button type="button" class="btn btn-primary btn-block my-4" data-toggle="modal" data-target="#myModal">プロフィール編集</button>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<h2>プロフィール編集</h2>
+				<div id="app">
+					<profile-edit-component
+						username="{{ $loginUser->name }}"
+						summary="{{ $loginUser->profile }}"
+						date="{{ $loginUser->birthday }}"
+						send_url="{{ route('mypage.profile.edit') }}"
+						csrf_token="{{ csrf_token() }}"
+						>
+					</profile-edit-component>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<a class="btn btn-success btn-block my-4" href="@if ($loginUser->auth === 0) {{ route('mypage.settings.master') }} @else {{ route('mypage.settings.normal') }} @endif">設定</a>
 

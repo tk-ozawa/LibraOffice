@@ -30,6 +30,24 @@ class UserService
 	}
 
 	/**
+	 * ユーザー情報更新(プロフィール系)
+	 *
+	 * @param array $input
+	 * @param int $userId
+	 */
+	public function updateProfile(array $input, int $userId)
+	{
+		$user = $this->user->where('id', $userId)->first();
+
+		foreach ($input as $key => $val) {
+			$user->$key = $val;
+		}
+
+		$user->save();
+	}
+
+
+	/**
 	 * メールアドレスによるユーザー情報取得
 	 *
 	 * @param string $email

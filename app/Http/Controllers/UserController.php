@@ -93,4 +93,16 @@ class UserController extends Controller
 
 		return view('user.mypage', compact('rentals', 'rentalsCount', 'rentalsHistory', 'loginUser'));
 	}
+
+	/**
+	 * プロフィール編集処理
+	 */
+	public function editProfile(Request $request)
+	{
+		$input = $request->all();
+
+		$this->user->updateProfile($input, $request->session()->get('id'));
+
+		return;
+	}
 }
