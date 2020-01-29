@@ -6,16 +6,16 @@
         <input v-model="edit.name" type="text" class="form-control" id="inputTitle" placeholder="foo...">
       </div>
     </div>
-    <div :class="errorClassObject('summary')" class="form-group">
+    <div :class="errorClassObject('profile')" class="form-group">
       <label for="inputSummary" class="col-md-2 control-label">プロフィール</label>
       <div class="col-md-10">
-        <textarea v-model="edit.summary" class="form-control" rows="3" id="inputSummary"></textarea>
+        <textarea v-model="edit.profile" class="form-control" rows="3" id="inputSummary"></textarea>
       </div>
     </div>
-    <div :class="errorClassObject('date')" class="form-group">
+    <div :class="errorClassObject('birthday')" class="form-group">
       <label for="inputRelease" class="col-md-2 control-label">誕生日</label>
       <div class="col-md-10">
-        <input v-model="edit.date" type="date" class="form-control" id="inputRelease">
+        <input v-model="edit.birthday" type="date" class="form-control" id="inputRelease">
       </div>
     </div>
     <div class="form-group">
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-const dateRE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+const birthdayRE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
 
 Vue.component('v-loading', {
     props: {
@@ -49,8 +49,8 @@ Vue.component('v-loading', {
 export default {
   props: {
     username : String,
-    profile: String,
-    birthday: String,
+    summary: String,
+    date: String,
     send_url: String,
     csrf_token: String,
   },
@@ -58,8 +58,8 @@ export default {
     return {
       edit: {
         name: this.username,
-        summary: this.profile,
-        date: this.birthday
+        profile: this.summary,
+        birthday: this.date
       },
       show: false
     }
