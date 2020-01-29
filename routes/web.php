@@ -21,6 +21,9 @@ Route::post('/login', 'UserController@login')->name('login');
 Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::post('/logout', 'UserController@logout')->name('logout');
 
+	Route::get('/mypage', 'UserController@goMypage')->name('mypage');
+	Route::get('/profile', 'UserController@goProfile')->name('mypage.profile');
+
 	Route::get('/search', 'BookController@goSearch')->name('search');
 	Route::get('/search/order/input', 'BookController@goOrderByISBN')->name('search.order.input');
 	Route::get('/order/input', 'BookController@goOrder')->name('order.input');
@@ -38,6 +41,7 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/book/find/author/{authorId}', 'BookController@findByAuthorId')->name('book.find.author');
 
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
+	Route::get('/normal/settings', 'NormalController@goSettings')->name('mypage.settings.normal');
 
 	Route::get('/user/{userId}', 'UserController@goDetail')->name('user.detail');
 
@@ -50,6 +54,8 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 		Route::get('/master/order/accept', 'MasterController@orderAccept')->name('order.accept');
 		Route::get('/master/purchase/complete/{purchaseId}', 'MasterController@goPurchaseComplete')->name('purchase.complete.confirm');
 		Route::get('/master/purchase/complete', 'MasterController@purchaseComplete')->name('purchase.complete');
+
+		Route::get('/master/settings', 'MasterController@goSettings')->name('mypage.settings.master');
 	});
 });
 
