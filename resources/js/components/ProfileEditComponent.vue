@@ -1,20 +1,19 @@
 <template>
   <fieldset>
-    <legend>プロフィール編集</legend>
     <div :class="errorClassObject('name')" class="form-group">
-      <label for="inputTitle" class="col-md-2 control-label">ユーザー名</label>
+      <label for="inputTitle" class="col-md-2 control-label">ユーザー名 <span style="color:red; font-size:10px;">※必須</span></label>
       <div class="col-md-10">
-        <input v-model="edit.name" type="text" class="form-control" id="inputTitle" placeholder="書籍タイトル">
+        <input v-model="edit.name" type="text" class="form-control" id="inputTitle" placeholder="foo...">
       </div>
     </div>
     <div :class="errorClassObject('summary')" class="form-group">
-      <label for="inputSummary" class="col-md-2 control-label">サマリ</label>
+      <label for="inputSummary" class="col-md-2 control-label">プロフィール</label>
       <div class="col-md-10">
         <textarea v-model="edit.summary" class="form-control" rows="3" id="inputSummary"></textarea>
       </div>
     </div>
     <div :class="errorClassObject('date')" class="form-group">
-      <label for="inputRelease" class="col-md-2 control-label">発売日</label>
+      <label for="inputRelease" class="col-md-2 control-label">誕生日</label>
       <div class="col-md-10">
         <input v-model="edit.date" type="date" class="form-control" id="inputRelease">
       </div>
@@ -35,7 +34,7 @@
 </template>
 
 <script>
-const dateRE   = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+const dateRE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
 
 Vue.component('v-loading', {
     props: {
@@ -70,8 +69,6 @@ export default {
       const edit = this.edit
       return {
         name  : (!!edit.name),
-        summary: (!!edit.summary),
-        date: (!!edit.date && dateRE.test(edit.date))
       }
     },
     isValid() {
