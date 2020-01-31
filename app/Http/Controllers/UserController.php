@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use App\Services\RentalService;
 use App\Models\Database\UserProp;
+use App\Models\Eloquent\Rental;
 
 class UserController extends Controller
 {
 	private $user;
+	private $rental;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user)
+	function __construct(UserService $user, RentalService $rental)
 	{
 		$this->user = $user;
+		$this->rental = $rental;
 	}
 
 	/**
@@ -69,5 +73,40 @@ class UserController extends Controller
 	{
 		$request->session()->flush();
 		return redirect(route('login.form'))->with('flashMsg', 'ログアウトしました。');
+	}
+
+	/**
+	 * マイページ表示
+	 */
+	public function goMypage(Request $request)
+	{
+		$session = $request->session()->all();
+		$userId = $session['id'];
+
+		// 現在借りている本
+		$rentals = $this->rental->getRentals($userId);
+		$rentalsCount = $this->rental->rentalsCount($userId);
+
+		// 今までいくら得したか
+		$profitMoney = $this->rental->getHistoryProfitByUserId($userId);
+
+		// 借りた履歴
+		$rentalsHistory = $this->rental->getHistoryByUserId($userId);
+
+		$loginUser = $this->user->findById($userId);
+
+		return view('user.mypage', compact('rentals', 'rentalsCount', 'rentalsHistory', 'loginUser', 'profitMoney'));
+	}
+
+	/**
+	 * プロフィール編集処理
+	 */
+	public function editProfile(Request $request)
+	{
+		$input = $request->all();
+
+		$this->user->updateProfile($input, $request->session()->get('id'));
+
+		return;
 	}
 }

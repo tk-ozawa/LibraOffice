@@ -204,4 +204,71 @@ class RentalService
 			->groupBy('purchase_id')
 			->get();
 	}
+
+	/**
+	 * ユーザーIDによる貸出履歴の取得
+	 *
+	 * @param int $userId
+	 * @return array
+	 */
+	public function getHistoryByUserId(int $userId)
+	{
+		$rentalExists = $this->rental
+			->where('user_id', $userId)
+			->where('status', 1)
+			->exists();
+
+		if (!$rentalExists) {
+			return null;
+		}
+
+		return $this->rental
+			->where('user_id', $userId)
+			->where('status', 1)
+			->with(['purchases' => function ($q) {
+				$q->select('purchases.id', 'purchases.book_id', 'purchases.purchase_date')
+					->where('status', 1)	// 社内図書のみ取得
+					->with(['books' => function ($q) {
+						$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+							->with(['categories' => function ($q) {
+								$q->select('categories.id', 'categories.name');
+							}])
+							->with(['authors' => function ($q) {
+								$q->select('authors.id', 'authors.name');
+							}])
+							->with(['publishers' => function ($q) {
+								$q->select('publishers.id', 'publishers.name');
+							}]);
+					}]);
+			}])
+			->get();
+	}
+
+	/**
+	 * ユーザーIDから今までどれだけ得できたか取得
+	 *
+	 * @param int $userId
+	 * @return int
+	 */
+	public function getHistoryProfitByUserId(int $userId): int
+	{
+		$rentals = $this->rental
+			->where('user_id', $userId)
+			->with(['purchases' => function ($q) {
+				$q->select('purchases.id', 'purchases.book_id', 'purchases.purchase_date')
+					->where('status', 1)	// 社内図書のみ取得
+					->with(['books' => function ($q) {
+						$q->select('books.id', 'books.price');
+					}]);
+			}])
+			->groupBy('purchase_id')
+			->get();
+
+		$totalProfitMoney = 0;
+		foreach ($rentals as $rental) {
+			$totalProfitMoney += $rental->purchases->books->price;
+		}
+
+		return $totalProfitMoney;
+	}
 }

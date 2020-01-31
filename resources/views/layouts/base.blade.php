@@ -22,16 +22,13 @@
 			<ul class="navbar-nav mr-auto">
 				@yield('navItem')
 			</ul>
-			<form class="form-inline my-2 my-lg-0" action="{{ route('book.find.title') }}" method="GET">
+			<form class="form-inline my-2 my-lg-0 mr-3" action="{{ route('book.find.title') }}" method="GET">
 				<input type="search" name="keyword" class="form-control mr-sm-2" placeholder="本のタイトル…" aria-label="本のタイトル…">
 				<button type="submit" class="btn btn-outline-success my-2 my-sm-0">検索</button>
 			</form>
 			<ul class="navbar-nav">
-				<li class="nav-item ml-3">
-					<form action="{{ route('logout') }}" method="POST">
-						@csrf
-						<button class="btn btn-danger" type="submit">ログアウト</button>
-					</form>
+				<li class="nav-item">
+					<a class="btn btn-primary" href="{{ route('mypage') }}">マイページ</a>
 				</li>
 			</ul>
 		</div>
