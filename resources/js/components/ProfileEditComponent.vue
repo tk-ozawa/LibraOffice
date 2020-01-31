@@ -1,30 +1,30 @@
 <template>
   <fieldset>
     <div :class="errorClassObject('name')" class="form-group">
-      <label for="inputTitle" class="col-md-2 control-label">ユーザー名 <span style="color:red; font-size:10px;">※必須</span></label>
-      <div class="col-md-10">
+      <label for="inputTitle" class="col-md-2 control-label mx-auto">ユーザー名 <span style="color:red; font-size:10px;">※必須</span></label>
+      <div class="col-md-10 mx-auto">
         <input v-model="edit.name" type="text" class="form-control" id="inputTitle" placeholder="foo...">
       </div>
     </div>
     <div :class="errorClassObject('profile')" class="form-group">
-      <label for="inputSummary" class="col-md-2 control-label">プロフィール</label>
-      <div class="col-md-10">
+      <label for="inputSummary" class="col-md-2 control-label mx-auto">プロフィール</label>
+      <div class="col-md-10 mx-auto">
         <textarea v-model="edit.profile" class="form-control" rows="3" id="inputSummary"></textarea>
       </div>
     </div>
     <div :class="errorClassObject('birthday')" class="form-group">
-      <label for="inputRelease" class="col-md-2 control-label">誕生日</label>
-      <div class="col-md-10">
+      <label for="inputRelease" class="col-md-2 control-label mx-auto">誕生日</label>
+      <div class="col-md-10 mx-auto">
         <input v-model="edit.birthday" type="date" class="form-control" id="inputRelease">
       </div>
     </div>
     <div class="form-group">
-      <div class="col-md-10 col-md-offset-2">
+      <div class="col-md-10 col-md-offset-2 mx-auto">
         <button
           @click="doSubmit"
           :disabled="isValid == false"
           type="submit"
-          class="btn btn-primary center-block"
+          class="btn btn-primary center-block mx-auto float-right"
           v-if="!show"
         >Submit</button>
         <v-loading :show="show"></v-loading>

@@ -243,4 +243,32 @@ class RentalService
 			}])
 			->get();
 	}
+
+	/**
+	 * ユーザーIDから今までどれだけ得できたか取得
+	 *
+	 * @param int $userId
+	 * @return int
+	 */
+	public function getHistoryProfitByUserId(int $userId): int
+	{
+		$rentals = $this->rental
+			->where('user_id', $userId)
+			->with(['purchases' => function ($q) {
+				$q->select('purchases.id', 'purchases.book_id', 'purchases.purchase_date')
+					->where('status', 1)	// 社内図書のみ取得
+					->with(['books' => function ($q) {
+						$q->select('books.id', 'books.price');
+					}]);
+			}])
+			->groupBy('purchase_id')
+			->get();
+
+		$totalProfitMoney = 0;
+		foreach ($rentals as $rental) {
+			$totalProfitMoney += $rental->purchases->books->price;
+		}
+
+		return $totalProfitMoney;
+	}
 }
