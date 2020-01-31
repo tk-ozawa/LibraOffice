@@ -105,4 +105,9 @@ class UserController extends Controller
 
 		return;
 	}
+
+	public function goTimeline(Request $request)
+	{
+
+	}
 }
