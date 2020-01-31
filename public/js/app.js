@@ -38066,7 +38066,7 @@ var render = function() {
       [
         _vm._m(0),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-10" }, [
+        _c("div", { staticClass: "col-md-10 mx-auto" }, [
           _c("input", {
             directives: [
               {
@@ -38099,13 +38099,13 @@ var render = function() {
         _c(
           "label",
           {
-            staticClass: "col-md-2 control-label",
+            staticClass: "col-md-2 control-label mx-auto",
             attrs: { for: "inputSummary" }
           },
           [_vm._v("プロフィール")]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-10" }, [
+        _c("div", { staticClass: "col-md-10 mx-auto" }, [
           _c("textarea", {
             directives: [
               {
@@ -38138,13 +38138,13 @@ var render = function() {
         _c(
           "label",
           {
-            staticClass: "col-md-2 control-label",
+            staticClass: "col-md-2 control-label mx-auto",
             attrs: { for: "inputRelease" }
           },
           [_vm._v("誕生日")]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-10" }, [
+        _c("div", { staticClass: "col-md-10 mx-auto" }, [
           _c("input", {
             directives: [
               {
@@ -38173,13 +38173,14 @@ var render = function() {
     _c("div", { staticClass: "form-group" }, [
       _c(
         "div",
-        { staticClass: "col-md-10 col-md-offset-2" },
+        { staticClass: "col-md-10 col-md-offset-2 mx-auto" },
         [
           !_vm.show
             ? _c(
                 "button",
                 {
-                  staticClass: "btn btn-primary center-block",
+                  staticClass:
+                    "btn btn-primary center-block mx-auto float-right",
                   attrs: { disabled: _vm.isValid == false, type: "submit" },
                   on: { click: _vm.doSubmit }
                 },
@@ -38201,7 +38202,10 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "label",
-      { staticClass: "col-md-2 control-label", attrs: { for: "inputTitle" } },
+      {
+        staticClass: "col-md-2 control-label mx-auto",
+        attrs: { for: "inputTitle" }
+      },
       [
         _vm._v("ユーザー名 "),
         _c("span", { staticStyle: { color: "red", "font-size": "10px" } }, [
