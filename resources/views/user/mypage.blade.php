@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('head')
+<script src="http://platform.twitter.com/widgets.js"></script>
+@endsection
+
 @section('title')
 マイページ
 @endsection
@@ -75,21 +79,42 @@
 </div>
 @endif
 
+
+<h2>あなたがこれまでに得した金額</h2>
+<p>(読んだ本の総額)</p>
+<div style="display:flex">
+	<p>{{ $profitMoney }}円</p>　
+	<a href="https://twitter.com/share" class="twitter-share-button"
+	data-text="あなたが今までにLibraOfficeを使って得した金額は {{ $profitMoney }}円です！"
+	data-lang="ja"
+	data-count="vertical" data-hashtags="LibraOffice"
+	></a>
+
+</div>
+
+
 <div class="px-4">
 	<button type="button" class="btn btn-primary btn-block my-4" data-toggle="modal" data-target="#myModal">プロフィール編集</button>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
-				<h2>プロフィール編集</h2>
-				<div id="app">
-					<profile-edit-component
-						username="{{ $loginUser->name }}"
-						summary="{{ $loginUser->profile }}"
-						date="{{ $loginUser->birthday }}"
-						send_url="{{ route('mypage.profile.edit') }}"
-						csrf_token="{{ csrf_token() }}"
-						>
-					</profile-edit-component>
+				<div class="modal-header">
+					<h2 class="modal-title">プロフィール編集</h2>
+				</div>
+				<div class="modal-body">
+					<div id="app">
+						<profile-edit-component
+							username="{{ $loginUser->name }}"
+							summary="{{ $loginUser->profile }}"
+							date="{{ $loginUser->birthday }}"
+							send_url="{{ route('mypage.profile.edit') }}"
+							csrf_token="{{ csrf_token() }}"
+							>
+						</profile-edit-component>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 				</div>
 			</div>
 		</div>
