@@ -81,17 +81,21 @@ class UserController extends Controller
 	public function goMypage(Request $request)
 	{
 		$session = $request->session()->all();
+		$userId = $session['id'];
 
 		// 現在借りている本
-		$rentals = $this->rental->getRentals($session['id']);
-		$rentalsCount = $this->rental->rentalsCount($session['id']);
+		$rentals = $this->rental->getRentals($userId);
+		$rentalsCount = $this->rental->rentalsCount($userId);
+
+		// 今までいくら得したか
+		$profitMoney = $this->rental->getHistoryProfitByUserId($userId);
 
 		// 借りた履歴
-		$rentalsHistory = $this->rental->getHistoryByUserId($session['id']);
+		$rentalsHistory = $this->rental->getHistoryByUserId($userId);
 
-		$loginUser = $this->user->findById($session['id']);
+		$loginUser = $this->user->findById($userId);
 
-		return view('user.mypage', compact('rentals', 'rentalsCount', 'rentalsHistory', 'loginUser'));
+		return view('user.mypage', compact('rentals', 'rentalsCount', 'rentalsHistory', 'loginUser', 'profitMoney'));
 	}
 
 	/**
