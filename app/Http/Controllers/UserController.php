@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\RentalService;
+use App\Services\TimelineService;
 use App\Models\Database\UserProp;
 use App\Models\Eloquent\Rental;
 
@@ -12,16 +13,18 @@ class UserController extends Controller
 {
 	private $user;
 	private $rental;
+	private $timelineService;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, RentalService $rental)
+	function __construct(UserService $user, RentalService $rental, TimelineService $timelineService)
 	{
 		$this->user = $user;
 		$this->rental = $rental;
+		$this->timelineService = $timelineService;
 	}
 
 	/**
@@ -76,6 +79,14 @@ class UserController extends Controller
 	}
 
 	/**
+	 * ユーザー詳細画面表示処理
+	 */
+	public function goDetail(Request $request, int $userId)
+	{
+
+	}
+
+	/**
 	 * マイページ表示
 	 */
 	public function goMypage(Request $request)
@@ -110,8 +121,13 @@ class UserController extends Controller
 		return;
 	}
 
+	/**
+	 * タイムライン画面表示処理
+	 */
 	public function goTimeline(Request $request)
 	{
+		$timeline = $this->timelineService->getAll();
 
+		return view('user.timeline', compact('timeline'));
 	}
 }
