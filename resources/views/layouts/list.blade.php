@@ -11,6 +11,9 @@
 <li class="nav-item">
 	<a class="nav-link" href="{{ route('search') }}">書籍登録</a>
 </li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ route('timeline') }}">タイムライン</a>
+</li>
 @endsection
 
 @section('body')

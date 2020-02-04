@@ -5,18 +5,21 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Eloquent\Rental;
 use App\Models\Eloquent\User;
 use App\Models\Eloquent\Purchase;
+use App\Services\TimelineService;
 
 class RentalService
 {
 	private $rental;
 	private $purchase;
 	private $user;
+	private $timelineService;
 
-	function __construct(Rental $rental, Purchase $purchase, User $user)
+	function __construct(Rental $rental, Purchase $purchase, User $user, TimelineService $timelineService)
 	{
 		$this->rental = $rental;
 		$this->purchase = $purchase;
 		$this->user = $user;
+		$this->timelineService = $timelineService;
 	}
 
 	/**
@@ -28,11 +31,15 @@ class RentalService
 	 */
 	public function apply(int $purchaseId, int $userId): Purchase
 	{
-		$this->rental->create([
+		$insertRental = $this->rental->create([
 			'purchase_id' => $purchaseId,
 			'user_id' => $userId,
 			'status' => 0	// 0: 貸出中
 		]);
+
+		$rental = $this->rental->where('id', $insertRental->id)->first();
+
+		$this->timelineService->insert('借りました', $rental->user_id, $rental->purchase_id);
 
 		return $this->purchase
 			->where('id', $purchaseId)
@@ -51,13 +58,15 @@ class RentalService
 	 */
 	public function return(int $purchaseId, int $userId): Purchase
 	{
-		$return = $this->rental
+		$rental = $this->rental
 			->where('purchase_id', $purchaseId)
 			->where('user_id', $userId)
 			->where('status', 0)
 			->first();
-		$return->status = 1;
-		$return->save();
+		$rental->status = 1;
+		$rental->save();
+
+		$this->timelineService->insert('返却しました', $rental->user_id, $rental->purchase_id);
 
 		return $this->purchase
 			->where('id', $purchaseId)

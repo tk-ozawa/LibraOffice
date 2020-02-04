@@ -24,6 +24,8 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/mypage', 'UserController@goMypage')->name('mypage');
 	Route::post('/profile/edit', 'UserController@editProfile')->name('mypage.profile.edit');
 
+	Route::get('/timeline', 'UserController@goTimeline')->name('timeline');
+
 	Route::get('/search', 'BookController@goSearch')->name('search');
 	Route::get('/search/order/input', 'BookController@goOrderByISBN')->name('search.order.input');
 	Route::get('/order/input', 'BookController@goOrder')->name('order.input');
