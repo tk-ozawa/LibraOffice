@@ -4,9 +4,9 @@ namespace App\Models\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Favorite extends Model
+class Reaction extends Model
 {
-	protected $table = 'favorites';
+	protected $table = 'reactions';
 
 	public $timestamps = true;	// created_at, updated_at有
 
