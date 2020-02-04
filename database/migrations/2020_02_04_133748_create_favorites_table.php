@@ -18,6 +18,7 @@ class CreateFavoritesTable extends Migration
 			$table->integer('timeline_id')->commnet('タイムラインID')->unsigned();
 			$table->integer('user_id')->commnet('お気に入りしたユーザーID')->unsigned();
 			$table->integer('status')->default(1)->commnet('0:無効, 1:有効');
+			$table->timestamps();
 
 			$table->foreign('timeline_id')->references('id')->on('timeline');
 			$table->foreign('user_id')->references('id')->on('users');
