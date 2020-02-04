@@ -52,11 +52,11 @@ class User extends Model
 		);
 	}
 
-	public function favorites()
+	public function reactions()
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Eloquent\Favorite'	// 子テーブルのモデル
+			'App\Models\Eloquent\Reaction'	// 子テーブルのモデル
 			, 'user_id'						// 参照先の外部キー
 			, 'id'							// 参照元の主キー
 		);
