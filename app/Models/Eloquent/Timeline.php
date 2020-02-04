@@ -31,4 +31,14 @@ class Timeline extends Model
 			, 'id'							// 参照先の主キー
 		);
 	}
+
+	public function favorites()
+	{
+		// 1対多
+		return $this->hasMany(
+			'App\Models\Eloquent\Favorite'	// 子テーブルのモデル
+			, 'timeline_id'					// 参照先の外部キー
+			, 'id'							// 参照元の主キー
+		);
+	}
 }

@@ -16,9 +16,9 @@ class User extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Eloquent\Order'			// 子テーブルモデル
-			, 'request_user_id'			// 参照先の外部キー
-			, 'id'						// 参照元の主キー
+			'App\Models\Eloquent\Order'		// 子テーブルモデル
+			, 'request_user_id'				// 参照先の外部キー
+			, 'id'							// 参照元の主キー
 		);
 	}
 
@@ -26,9 +26,9 @@ class User extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Eloquent\Order'			// 子テーブルモデル
-			, 'approval_user_id'		// 参照先の外部キー
-			, 'id'						// 参照元の主キー
+			'App\Models\Eloquent\Order'		// 子テーブルモデル
+			, 'approval_user_id'			// 参照先の外部キー
+			, 'id'							// 参照元の主キー
 		);
 	}
 
@@ -37,8 +37,8 @@ class User extends Model
 		// 1対多
 		return $this->hasMany(
 			'App\Models\Eloquent\Purchase'	// 子テーブルモデル
-			, 'user_id'				// 参照先の外部キー
-			, 'id'					// 参照元の主キー
+			, 'user_id'						// 参照先の外部キー
+			, 'id'							// 参照元の主キー
 		);
 	}
 
@@ -46,9 +46,19 @@ class User extends Model
 	{
 		// 1対多
 		return $this->hasMany(
-			'App\Models\Eloquent\Rental'		// 子テーブルのモデル
-			, 'user_id'				// 参照先の外部キー
-			, 'id'					// 参照元の主キー
+			'App\Models\Eloquent\Rental'	// 子テーブルのモデル
+			, 'user_id'						// 参照先の外部キー
+			, 'id'							// 参照元の主キー
+		);
+	}
+
+	public function favorites()
+	{
+		// 1対多
+		return $this->hasMany(
+			'App\Models\Eloquent\Favorite'	// 子テーブルのモデル
+			, 'user_id'						// 参照先の外部キー
+			, 'id'							// 参照元の主キー
 		);
 	}
 }
