@@ -31,7 +31,7 @@ class TimelineService
 	/**
 	 * タイムライン取得
 	 */
-	public function getAll()
+	public function getAllQuery()
 	{
 		return $this->timeline
 			->with(['users' => function ($q) {
@@ -43,7 +43,12 @@ class TimelineService
 						$q->select('books.id', 'books.title');
 					}]);
 			}])
-			->orderBy('timeline.created_at', 'DESC')
-			->paginate(15);
+			->with(['reactions' => function ($q) {
+				$q->select('reactions.id', 'reactions.timeline_id', 'reactions.user_id', 'reactions.status')
+					->with(['users' => function ($q) {
+						$q->select('users.id', 'users.name');
+					}]);
+			}])
+			->orderBy('timeline.created_at', 'DESC');
 	}
 }
