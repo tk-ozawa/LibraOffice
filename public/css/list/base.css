@@ -15,8 +15,10 @@
 .cat-col {
 	overflow-wrap: break-word;
 }
-#open_rentals_wrapp {
-	border: 5px solid blue;
+#open_rentals_wrapp h2 {
+	border: 2px solid #fff;
+	color: #fff;
+	background-color: #3490dc;
 	border-radius: 25px;
 	padding: 10px;
 }

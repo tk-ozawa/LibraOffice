@@ -7,6 +7,9 @@
 <li class="nav-item active">
 	<a class="nav-link" @yield('navLinkHref')>書籍登録</a>
 </li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ route('timeline') }}">タイムライン</a>
+</li>
 @endsection
 
 @section('body')
