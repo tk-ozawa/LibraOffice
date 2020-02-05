@@ -15,9 +15,9 @@ class CreateReactionsTable extends Migration
 	{
 		Schema::create('reactions', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('timeline_id')->commnet('タイムラインID')->unsigned();
-			$table->integer('user_id')->commnet('お気に入りしたユーザーID')->unsigned();
-			$table->integer('status')->default(1)->commnet('0:無効, 1:有効');
+			$table->integer('timeline_id')->comment('タイムラインID')->unsigned();
+			$table->integer('user_id')->comment('お気に入りしたユーザーID')->unsigned();
+			$table->integer('status')->default(1)->comment('0:無効, 1:有効');
 			$table->timestamps();
 
 			$table->foreign('timeline_id')->references('id')->on('timeline');
