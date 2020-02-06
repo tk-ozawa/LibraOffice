@@ -14,7 +14,14 @@
 
 <header>
 	<nav class="navbar navbar-expand-md navbar-light" style="background-color: #e3f2fd;">
-		<a class="navbar-brand" href="{{ route('login') }}">LibraOffice</a>
+		<a class="navbar-brand" href="{{ route('login.form') }}">LibraOffice</a>
+		<div class="collapse navbar-collapse" id="Navber">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="btn btn-primary" href="{{ route('office.top') }}">OfficeTOP</a>
+				</li>
+			</ul>
+		</div>
 	</nav>
 </header>
 

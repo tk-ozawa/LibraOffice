@@ -18,6 +18,10 @@ Route::get('/foo', function () {
 Route::get('/', 'UserController@goLogin')->name('login.form');
 Route::post('/login', 'UserController@login')->name('login');
 
+Route::get('/office', 'OfficeController@goTop')->name('office.top');
+Route::get('/office/add/input', 'OfficeController@goRegister')->name('office.register.input');
+Route::post('/office/add', 'OfficeController@register')->name('office.register');
+
 Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::post('/logout', 'UserController@logout')->name('logout');
 
