@@ -10,4 +10,7 @@
 <li class="nav-item active">
 	<a class="nav-link">タイムライン</a>
 </li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ route('user.list') }}">社員一覧</a>
+</li>
 @endsection

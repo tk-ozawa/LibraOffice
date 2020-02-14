@@ -10,6 +10,9 @@
 <li class="nav-item">
 	<a class="nav-link" href="{{ route('timeline') }}">タイムライン</a>
 </li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ route('user.list') }}">社員一覧</a>
+</li>
 @endsection
 
 @section('body')
