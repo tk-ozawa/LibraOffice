@@ -87,7 +87,11 @@ class UserController extends Controller
 	 */
 	public function goDetail(Request $request, int $userId)
 	{
+		$user = $this->user->findById($userId);
 
+		$rentals = $this->rental->findByUserId($userId);
+
+		return view('user.profile', compact('user', 'rentals'));
 	}
 
 	/**
@@ -153,5 +157,15 @@ class UserController extends Controller
 		$input = $request->all();
 		$status = $this->reactionService->pushBtn($input['timelineId'], $request->session()->get('id'));
 		return json_encode(['status' => $status]);
+	}
+
+	/**
+	 * ユーザー一覧画面表示処理
+	 */
+	public function goList(Request $request)
+	{
+		$users = $this->user->goList();
+
+		return view('user.list', compact('users'));
 	}
 }
