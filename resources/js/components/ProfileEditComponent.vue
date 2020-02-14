@@ -1,7 +1,7 @@
 <template>
   <fieldset>
     <div :class="errorClassObject('name')" class="form-group">
-      <label for="inputTitle" class="col-md-2 control-label mx-auto">ユーザー名 <span style="color:red; font-size:10px;">※必須</span></label>
+      <label for="inputTitle" class="col-md-5 control-label mx-auto">ユーザー名 <span style="color:red; font-size:10px;">※必須</span></label>
       <div class="col-md-10 mx-auto">
         <input v-model="edit.name" type="text" class="form-control" id="inputTitle" placeholder="foo...">
       </div>

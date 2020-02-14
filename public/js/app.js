@@ -38451,7 +38451,7 @@ var staticRenderFns = [
     return _c(
       "label",
       {
-        staticClass: "col-md-2 control-label mx-auto",
+        staticClass: "col-md-5 control-label mx-auto",
         attrs: { for: "inputTitle" }
       },
       [
