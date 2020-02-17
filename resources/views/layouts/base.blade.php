@@ -42,7 +42,7 @@ function RentalCheck (purchaseId, bookTitle) {
 	let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `/book/${purchaseId}/rental`
+		window.location.href = `http://tk-ozawa.info/LibraOffice/public/book/${purchaseId}/rental`
 	}
 }
 
@@ -50,7 +50,7 @@ function ReturnCheck (purchaseId, bookTitle) {
 	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
+		window.location.href = `http://tk-ozawa.info/LibraOffice/public/book/${purchaseId}/return`
 	}
 }
 </script>

@@ -88,7 +88,7 @@ export default {
       // ログインユーザー自身が押したボタンの状態によっていいね数を更新
       axios
         .post(
-          '/timeline/reaction',
+          'http://tk-ozawa.info/LibraOffice/public/timeline/reaction',
           { timelineId: lineId },
           { headers: {'X-CSRF-TOKEN': this.csrf_token} }
         )
@@ -108,7 +108,7 @@ export default {
     }
   },
   created() {
-    axios.get('/timeline/json')
+    axios.get('http://tk-ozawa.info/LibraOffice/public/timeline/json')
     .then(response => {
       this.timelineLists = response.data
       for (const line of this.timelineLists) {
