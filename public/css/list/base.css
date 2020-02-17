@@ -29,3 +29,22 @@
 	display: none;
 	clear: both;
 }
+.ranking {
+	border-left: 2px solid gray;
+
+}
+.ranking h3 {
+	margin-top: 1rem;
+	margin-bottom: 2rem;
+	margin-left: 2rem;
+}
+li {
+	list-style-type: none;
+}
+.ranking-title {
+	font-size: large;
+	font-weight: bold;
+}
+.ranking-contents {
+	text-align: center;
+}
