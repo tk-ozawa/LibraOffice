@@ -36,7 +36,10 @@ class NormalController extends Controller
 		// 所持済みのリスト取得
 		$purchases = $this->purchase->getPurchases();
 
-		return view('normal.top', compact('rentals', 'rentalsCount', 'purchases'));
+		// ランキングを取得
+		$ranking = $this->rental->rentalRanking();
+
+		return view('normal.top', compact('rentals', 'rentalsCount', 'purchases', 'ranking'));
 	}
 
 }

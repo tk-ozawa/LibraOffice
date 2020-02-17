@@ -1,7 +1,7 @@
 @extends('layouts.timeline')
 
 @section('title')
-マイページ
+タイムライン
 @endsection
 
 @section('body')
