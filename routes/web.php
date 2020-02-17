@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/foo', function () {
-	return view('welcome');
-});
+Route::get('/foo', 'BookController@getRanking');
 
 Route::get('/', 'UserController@goLogin')->name('login.form');
 Route::post('/login', 'UserController@login')->name('login');
@@ -51,12 +49,15 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 	Route::get('/normal/settings', 'NormalController@goSettings')->name('mypage.settings.normal');
 
-	Route::get('/user/{userId}', 'UserController@goDetail')->name('user.detail');
+	Route::get('/user/detail/{userId}', 'UserController@goDetail')->name('user.detail');
+
+	Route::get('/user/list', 'UserController@goList')->name('user.list');
 
 	Route::group(['middleware' => ['CheckMasterAuth']], function () {
 		Route::get('/master', 'MasterController@goTop')->name('master.top');
+
 		Route::get('/master/user/add/input', 'MasterController@goRegister')->name('user.add.input');
-		Route::get('/master/user/add', 'MasterController@register')->name('user.add');
+		Route::post('/master/user/add', 'MasterController@register')->name('user.add');
 
 		Route::get('/master/order/accept/{orderId}', 'MasterController@goOrderAccept')->name('order.accept.confirm');
 		Route::get('/master/order/accept', 'MasterController@orderAccept')->name('order.accept');

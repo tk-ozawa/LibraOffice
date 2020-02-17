@@ -61,4 +61,14 @@ class User extends Model
 			, 'id'							// 参照元の主キー
 		);
 	}
+
+	public function offices()
+	{
+		// 1対1
+		return $this->belongsTo(
+			'App\Models\Eloquent\Office'
+			, 'office_id'
+			, 'id'
+		);
+	}
 }
