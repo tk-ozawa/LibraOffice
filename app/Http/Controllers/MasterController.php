@@ -90,7 +90,10 @@ class MasterController extends Controller
 		// 所持済みのリスト取得
 		$purchases = $this->purchase->getPurchases();
 
-		return view('master.top', compact('rentals', 'rentalsCount', 'requests', 'requestsCount', 'orderings', 'purchases', 'orderingsCount'));
+		// ランキングを取得
+		$ranking = $this->rental->rentalRanking();
+
+		return view('master.top', compact('rentals', 'rentalsCount', 'requests', 'requestsCount', 'orderings', 'purchases', 'orderingsCount', 'ranking'));
 	}
 
 	/**
