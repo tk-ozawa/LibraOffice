@@ -2076,7 +2076,7 @@ __webpack_require__.r(__webpack_exports__);
       this.isReactionlists.splice(lineId, 1, 2); // status:2 はローディングアニメーション用
       // ログインユーザー自身が押したボタンの状態によっていいね数を更新
 
-      axios.post('/timeline/reaction', {
+      axios.post('http://tk-ozawa.info/LibraOffice/public/timeline/reaction', {
         timelineId: lineId
       }, {
         headers: {
@@ -2103,7 +2103,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
-    axios.get('/timeline/json').then(function (response) {
+    axios.get('http://tk-ozawa.info/LibraOffice/public/timeline/json').then(function (response) {
       _this2.timelineLists = response.data;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
