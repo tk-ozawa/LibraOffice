@@ -35,7 +35,9 @@
 	</nav>
 </header>
 
-@yield('body')
+<div class="container">
+	@yield('body')
+</div>
 
 <script>
 function RentalCheck (purchaseId, bookTitle) {
