@@ -192,26 +192,38 @@ class RentalService
 			return null;
 		}
 
-		return $this->rental
+		$rentals = $this->rental
 			->where('user_id', $userId)
 			->with(['purchases' => function ($q) {
 				$q->select('purchases.id', 'purchases.book_id', 'purchases.purchase_date')
-					->where('status', 1)	// 社内図書のみ取得
-					->with(['books' => function ($q) {
-						$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
-							->with(['categories' => function ($q) {
-								$q->select('categories.id', 'categories.name');
-							}])
-							->with(['authors' => function ($q) {
-								$q->select('authors.id', 'authors.name');
-							}])
-							->with(['publishers' => function ($q) {
-								$q->select('publishers.id', 'publishers.name');
-							}]);
-					}]);
+					->where('status', 1);	// 社内図書のみ取得
 			}])
 			->groupBy('purchase_id')
 			->get();
+
+		$purProps = [];
+
+		foreach ($rentals as $rental) {
+			$purchase = $rental->purchases
+				->with(['books' => function ($q) {
+					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+						->with(['categories' => function ($q) {
+							$q->select('categories.id', 'categories.name');
+						}])
+						->with(['authors' => function ($q) {
+							$q->select('authors.id', 'authors.name');
+						}])
+						->with(['publishers' => function ($q) {
+							$q->select('publishers.id', 'publishers.name');
+						}]);
+				}])
+				->first();
+
+			$isRentalUserArr = $this->isRentalUser($purchase->id);
+			$purProps[] = ['purchases' => $purchase, 'isRental' => $isRentalUserArr['flg'], 'rentalUserId' => $isRentalUserArr['userId']];
+		}
+
+		return $purProps;
 	}
 
 	/**
