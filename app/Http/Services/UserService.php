@@ -22,7 +22,7 @@ class UserService
 	public function add(UserProp $userProp)
 	{
 		$input = UserProp::objToArr($userProp);
-		$input['status'] = 0;	// 初期は無効アカウント
+		$input['status'] = 1;	// 初期は無効アカウント	テストで1にしてる
 		$input['password'] = md5($userProp->password);
 
 		$user = $this->user->create($input);
@@ -46,7 +46,6 @@ class UserService
 		$user->save();
 	}
 
-
 	/**
 	 * メールアドレスによるユーザー情報取得
 	 *
@@ -68,7 +67,6 @@ class UserService
 	{
 		return $this->user->where('id', $userId)->first();
 	}
-
 
 	/**
 	 * ログイン処理
@@ -98,5 +96,25 @@ class UserService
 		}
 
 		return null;	// ログイン成功
+	}
+
+	/**
+	 * ユーザーリスト情報取得
+	 *
+	 * @return array
+	 */
+	public function goList()
+	{
+		$users = $this->user
+			->select([
+				'id', 'name', 'email', 'office_id', 'auth', 'profile', 'birthday'
+			])
+			->where('status', 1)
+			->with(['offices' => function ($q) {
+				$q->select('offices.id', 'offices.name');
+			}])
+			->get();
+
+		return $users;
 	}
 }
