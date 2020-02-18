@@ -29,7 +29,8 @@ class OrderService
 			->create([
 				'request_user_id' => $requestUserId,
 				'book_id' => $bookId,
-				'office_id' => $officeId
+				'office_id' => $officeId,
+				'status' => 0
 			]);
 	}
 
@@ -45,6 +46,7 @@ class OrderService
 		// 注文依頼に承諾者情報を追加
 		$order = $this->order->where('id', $orderId)->first();
 		$order->approval_user_id = $approvalUserId;
+		$order->status = 1;
 		$order->save();
 
 		return $order;
@@ -57,7 +59,7 @@ class OrderService
 	 */
 	public function getRequests(): array
 	{
-		$reuqests = $this->order->whereNull('approval_user_id')->get();
+		$reuqests = $this->order->where('status', 0)->get();
 
 		$reqProps = [];
 		foreach ($reuqests as $req) {
