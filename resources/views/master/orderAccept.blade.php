@@ -36,8 +36,20 @@
 	</tbody>
 </table>
 
-<form action="{{ route('order.accept') }}" method="get">
-	<input type="hidden" name="order_id" value="{{ $order->id }}">
-	<button type="submit" class="btn btn-primary">この書籍を発注する</button>
-</form>
+<div class="row">
+	<button type="submit" class="btn btn-danger mr-2" onclick="btnCheck('reject/{{ $order->id }}', '却下')">注文依頼を却下する</button>
+	<button type="submit" class="btn btn-primary" onclick="btnCheck('accept?order_id={{ $order->id }}', '発注')">この書籍を発注する</button>
+</div>
+@endsection
+
+@section('script')
+<script>
+function btnCheck (order, confirmStr) {
+	let res = confirm(`${confirmStr}しますか？`)
+	if ( res == true ) {
+		// OKなら移動
+		window.location.href = `/master/order/${order}`
+	}
+}
+</script>
 @endsection
