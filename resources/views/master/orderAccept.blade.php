@@ -37,7 +37,9 @@
 </table>
 
 <div class="row">
-	<button type="submit" class="btn btn-danger mr-2" onclick="btnCheck('reject/{{ $order->id }}', '却下')">注文依頼を却下する</button>
+	<form action="{{ route('order.reject.input', ['orderId' => $order->id]) }}" method="get">
+		<button type="submit" class="btn btn-danger mr-2">注文依頼を却下する</button>
+	</form>
 	<button type="submit" class="btn btn-primary" onclick="btnCheck('accept?order_id={{ $order->id }}', '発注')">この書籍を発注する</button>
 </div>
 @endsection
