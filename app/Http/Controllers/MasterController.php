@@ -127,6 +127,22 @@ class MasterController extends Controller
 	}
 
 	/**
+	 * 注文依頼却下処理
+	 */
+	public function orderReject(Request $request)
+	{
+		$input = $request->all();
+		$session = $request->session()->all();
+
+		// 処理
+		$order = $this->order->orderReject($input['order_id'], $session['id']);
+
+		// メール送信
+
+		return redirect(route('master.top'))->with("flashMsg", "次の注文依頼を却下しました。注文ID:{$order->id}");
+	}
+
+	/**
 	 * 書籍発注完了申請画面表示処理
 	 */
 	public function goPurchaseComplete(Request $request, int $purchaseId)
