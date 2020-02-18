@@ -61,6 +61,9 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 
 		Route::get('/master/order/accept/{orderId}', 'MasterController@goOrderAccept')->name('order.accept.confirm');
 		Route::get('/master/order/accept', 'MasterController@orderAccept')->name('order.accept');
+		Route::get('/master/order/reject/{orderId}', 'MasterController@goOrderReject')->name('order.reject.input');
+		Route::get('/master/order/reject', 'MasterController@orderReject')->name('order.reject');
+
 		Route::get('/master/purchase/complete/{purchaseId}', 'MasterController@goPurchaseComplete')->name('purchase.complete.confirm');
 		Route::get('/master/purchase/complete', 'MasterController@purchaseComplete')->name('purchase.complete');
 

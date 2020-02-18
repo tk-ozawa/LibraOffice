@@ -32,7 +32,7 @@
 					@php $book = $req['book']; @endphp
 					<tr>
 						<th scope="row" class="index-col">{{ $loop->iteration }}</th scope="row">
-						<td class="btn-col"><a href="{{ route('order.accept.confirm', ['orderId' => $req['order']->id]) }}" class="btn btn-primary" target="_self">発注する</a></td>
+						<td class="btn-col"><a href="{{ route('order.accept.confirm', ['orderId' => $req['order']->id]) }}" class="btn btn-primary" target="_self">詳細へ</a></td>
 						<td class="img-col"><a href="https://www.amazon.co.jp/s?k={{ $book->title }}&i=stripbooks"><img
 									src="{{ $book->img_url }}"></a></td>
 						<td><a href="https://www.amazon.co.jp/s?k={{ $book->title }}&i=stripbooks">{{ $book->title }}

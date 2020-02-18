@@ -205,6 +205,7 @@ class RentalService
 
 		foreach ($rentals as $rental) {
 			$purchase = $rental->purchases
+				->where('id', $rental->purchases->id)
 				->with(['books' => function ($q) {
 					$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
 						->with(['categories' => function ($q) {
