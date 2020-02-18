@@ -303,19 +303,4 @@ class BookService
 
 		return $bookObj;
 	}
-
-	/**
-	 * 書籍がDBに登録済みか判別
-	 *
-	 * @param string $ISBN
-	 * @param int $edition
-	 * @return bool
-	 */
-	public function exists(string $ISBN, int $edition): bool
-	{
-		return $this->book
-			->where('ISBN', $ISBN)
-			->where('edition', $edition)
-			->exists();
-	}
 }
