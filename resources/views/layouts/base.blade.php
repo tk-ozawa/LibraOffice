@@ -58,5 +58,6 @@ function ReturnCheck (purchaseId, bookTitle) {
 	}
 }
 </script>
+@yield('script')
 </body>
 </html>
