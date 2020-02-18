@@ -60,7 +60,7 @@ class BookController extends Controller
 		$input = $request->all();
 
 		// DB登録済チェック
-		if ($this->book->exists($input['ISBN'], $input['edition'])) {
+		if ($this->purchase->exists($input['ISBN'], $input['edition'])) {
 			return redirect('/search')->with('infoMsg', "書籍情報は登録済みです。ISBN:{$input['ISBN']}, 第{$input['edition']}版");
 		}
 
