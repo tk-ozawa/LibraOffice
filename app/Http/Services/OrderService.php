@@ -35,6 +35,23 @@ class OrderService
 	}
 
 	/**
+	 * 注文依頼却下処理
+	 *
+	 * @param int $orderId
+	 * @param int $approvalUserId
+	 * @return Order $order
+	 */
+	public function orderReject(int $orderId, int $approvalUserId): Order
+	{
+		$order = $this->order->where('id', $orderId)->first();
+		$order->approval_user_id = $approvalUserId;
+		$order->status = 2;
+		$order->save();
+
+		return $order;
+	}
+
+	/**
 	 * 注文依頼承諾処理
 	 *
 	 * @param int $orderId
@@ -43,7 +60,6 @@ class OrderService
 	 */
 	public function orderAccept(int $orderId, int $approvalUserId): Order
 	{
-		// 注文依頼に承諾者情報を追加
 		$order = $this->order->where('id', $orderId)->first();
 		$order->approval_user_id = $approvalUserId;
 		$order->status = 1;
