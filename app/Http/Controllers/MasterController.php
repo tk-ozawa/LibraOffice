@@ -115,6 +115,18 @@ class MasterController extends Controller
 	}
 
 	/**
+	 * 注文依頼却下画面表示処理
+	 */
+	public function goOrderReject(Request $request, int $orderId)
+	{
+		$input = $request->all();
+
+		$order = $this->order->findById($orderId);
+
+		return view('master.orderReject', compact('order'));
+	}
+
+	/**
 	 * 書籍発注完了申請画面表示処理
 	 */
 	public function goPurchaseComplete(Request $request, int $purchaseId)
