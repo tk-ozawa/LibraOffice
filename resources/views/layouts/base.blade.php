@@ -16,7 +16,7 @@
 <header>
 	<nav class="navbar navbar-expand-md navbar-light" style="background-color: @if(session('auth') === 1)#e3f2fd; @else #607D8B; @endif">
 		<a class="navbar-brand" href="@if(session('auth') === 0) {{ route('master.top')}} @else {{ route('normal.top') }} @endif">
-			<img src="{{ asset('img/logo.png') }}" style="height:38px;">
+			<img src="{{ asset('img/logo.png') }}" id="logoImg">
 		</a>
 		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false" aria-label="ナビゲーションの切替">
 			<span class="navbar-toggler-icon"></span>
