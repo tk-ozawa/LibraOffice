@@ -26,6 +26,12 @@
 </div>
 @endif
 
+@if(session('valiMsg'))
+<div class="alert alert-warning" role="alert">
+	<span>{{ session('valiMsg') }}</span>
+</div>
+@endif
+
 <div class="row">
 	<div class="col-lg-9">
 		<div id="open_rentals_wrapp">

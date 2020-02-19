@@ -125,6 +125,20 @@ class RentalService
 	}
 
 	/**
+	 * 貸出中かどうかチェック
+	 *
+	 * @param int $purchaseId
+	 * @return Rental
+	 */
+	public function isRental(int $purchaseId)
+	{
+		return $this->rental
+			->where('purchase_id', $purchaseId)
+			->where('status', 0)
+			->exists();
+	}
+
+	/**
 	 * ユーザーIDから貸出中リストを取得する
 	 *
 	 * @param int $userId
