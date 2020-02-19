@@ -184,16 +184,19 @@ class BookController extends Controller
 	{
 		$session = $request->session()->all();
 
+		// 貸出申請中に貸し出されていた場合
+		if ($this->rental->isRental($purchaseId)) {
+			$purchase = $this->purchase->findById($purchaseId);
+			$flashMsg = "\"{$purchase->books->title}\"は貸出中でした。";
+			return redirect(route(($session['auth'] === 0) ? 'master.top' : 'normal.top'))->with('valiMsg', $flashMsg);
+		}
+
 		$purchase = $this->rental->apply($purchaseId, $session['id']);
 		$book = $purchase->books;
 
 		$flashMsg = "ID:{$book->id}, タイトル:{$book->title}の貸出申請を提出しました。";
 
-		if ($session['auth'] === 0) {
-			return redirect(route('master.top'))->with('flashMsg', $flashMsg);
-		}
-
-		return redirect(route('normal.top'))->with('flashMsg', $flashMsg);
+		return redirect(route(($session['auth'] === 0) ? 'master.top' : 'normal.top'))->with('flashMsg', $flashMsg);
 	}
 
 	/**
