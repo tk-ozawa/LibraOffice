@@ -89,28 +89,6 @@ class BookController extends Controller
 	}
 
 	/**
-	 * 注文確認画面
-	 */
-	public function orderConfirm(Request $request)
-	{
-		$input = $request->all();
-
-		$bookProp = new BookProp();
-		foreach ($input as $key => $val) {
-			$bookProp->$key = $val;
-		}
-
-		// 出版社DB登録->取得 | 取得
-		$publisher = $this->publisher->firstOrCreate($bookProp->publisher);
-
-		$book = $bookProp;
-
-		dd($book);
-
-		return view('book.order.orderConfirm', compact('book'));
-	}
-
-	/**
 	 * 注文処理
 	 */
 	public function order(Request $request)
