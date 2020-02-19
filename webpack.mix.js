@@ -14,4 +14,5 @@ const mix = require('laravel-mix');
 mix.setResourceRoot('http://tk-ozawa.info/LibraOffice/public/');
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .sourceMaps().js('node_modules/popper.js/dist/popper.js', 'public/js').sourceMaps();
