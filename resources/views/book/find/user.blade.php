@@ -49,7 +49,7 @@ function ReturnCheck (purchaseId, bookTitle) {
 	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
+		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/book/${purchaseId}/return`
 	}
 }
 </script>

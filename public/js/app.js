@@ -2066,7 +2066,8 @@ __webpack_require__.r(__webpack_exports__);
       isReactionlists: [],
       reactionUserslists: [],
       csrf_token: this.token,
-      loading: true
+      loading: true,
+      baseUrl: ""
     };
   },
   methods: {
@@ -2076,7 +2077,7 @@ __webpack_require__.r(__webpack_exports__);
       this.isReactionlists.splice(lineId, 1, 2); // status:2 はローディングアニメーション用
       // ログインユーザー自身が押したボタンの状態によっていいね数を更新
 
-      axios.post('/timeline/reaction', {
+      axios.post("".concat(this.baseUrl, "/timeline/reaction"), {
         timelineId: lineId
       }, {
         headers: {
@@ -2103,7 +2104,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
-    axios.get('/timeline/json').then(function (response) {
+    axios.get("".concat(this.baseUrl, "/timeline/json")).then(function (response) {
       _this2.timelineLists = response.data;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -38529,17 +38530,23 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("td", [
-            _c("a", { attrs: { href: "/user/" + line.user_id } }, [
-              _vm._v("\n          " + _vm._s(line.users.name) + "\n        ")
-            ]),
+            _c(
+              "a",
+              { attrs: { href: _vm.baseUrl + "/user/detail/" + line.user_id } },
+              [_vm._v("\n          " + _vm._s(line.users.name) + "\n        ")]
+            ),
             _vm._v("\n        さんが\n        "),
-            _c("a", { attrs: { href: "/book/" + line.purchases.id } }, [
-              _vm._v(
-                "\n          " +
-                  _vm._s(line.purchases.books.title) +
-                  "\n        "
-              )
-            ]),
+            _c(
+              "a",
+              { attrs: { href: _vm.baseUrl + "/book/" + line.purchases.id } },
+              [
+                _vm._v(
+                  "\n          " +
+                    _vm._s(line.purchases.books.title) +
+                    "\n        "
+                )
+              ]
+            ),
             _vm._v("\n        を\n        " + _vm._s(line.content) + "\n      ")
           ]),
           _vm._v(" "),
@@ -51180,8 +51187,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/LibraOffice/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/LibraOffice/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/ozawa/docker-compose/lamp_nginx/html/LibraOffice/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/ozawa/docker-compose/lamp_nginx/html/LibraOffice/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

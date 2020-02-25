@@ -14,7 +14,7 @@
 	<div class="card" style="width: 14rem;">
 		<div style="margin-top:1rem;text-align:center">
 			<img class="card-img-top"
-				src="/img/user/{{ $user->auth }}.png"
+				src="{{ env('MIX_REMOTE_BASE_URL') }}/img/user/{{ $user->auth }}.png"
 				style="width: 50%;">
 		</div>
 		<div class="card-body">

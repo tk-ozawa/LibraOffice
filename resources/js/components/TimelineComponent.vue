@@ -10,11 +10,11 @@
           {{line.created_at.substring(11, 16)}}
         </td>
         <td>
-          <a :href="'/user/' + line.user_id">
+          <a :href="`${baseUrl}/user/detail/${line.user_id}`">
             {{ line.users.name }}
           </a>
           さんが
-          <a :href="'/book/' + line.purchases.id">
+          <a :href="`${baseUrl}/book/${line.purchases.id}`">
             {{ line.purchases.books.title }}
           </a>
           を
@@ -79,6 +79,7 @@ export default {
       reactionUserslists: [],
       csrf_token: this.token,
       loading: true,
+      baseUrl: process.env.MIX_REMOTE_BASE_URL
     }
   },
   methods: {
@@ -88,7 +89,7 @@ export default {
       // ログインユーザー自身が押したボタンの状態によっていいね数を更新
       axios
         .post(
-          '/timeline/reaction',
+          `${this.baseUrl}/timeline/reaction`,
           { timelineId: lineId },
           { headers: {'X-CSRF-TOKEN': this.csrf_token} }
         )
@@ -108,7 +109,7 @@ export default {
     }
   },
   created() {
-    axios.get('/timeline/json')
+    axios.get(`${this.baseUrl}/timeline/json`)
     .then(response => {
       this.timelineLists = response.data
       for (const line of this.timelineLists) {
