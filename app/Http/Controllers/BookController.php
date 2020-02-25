@@ -60,7 +60,7 @@ class BookController extends Controller
 		$input = $request->all();
 
 		// DB登録済チェック
-		if ($this->book->exists($input['ISBN'], $input['edition'])) {
+		if ($this->purchase->exists($input['ISBN'], $input['edition'])) {
 			return redirect('/search')->with('infoMsg', "書籍情報は登録済みです。ISBN:{$input['ISBN']}, 第{$input['edition']}版");
 		}
 
@@ -86,28 +86,6 @@ class BookController extends Controller
 	public function goOrder(Request $request)
 	{
 		return view('book.order.orderNoISBN');
-	}
-
-	/**
-	 * 注文確認画面
-	 */
-	public function orderConfirm(Request $request)
-	{
-		$input = $request->all();
-
-		$bookProp = new BookProp();
-		foreach ($input as $key => $val) {
-			$bookProp->$key = $val;
-		}
-
-		// 出版社DB登録->取得 | 取得
-		$publisher = $this->publisher->firstOrCreate($bookProp->publisher);
-
-		$book = $bookProp;
-
-		dd($book);
-
-		return view('book.order.orderConfirm', compact('book'));
 	}
 
 	/**
@@ -206,16 +184,19 @@ class BookController extends Controller
 	{
 		$session = $request->session()->all();
 
+		// 貸出申請中に貸し出されていた場合
+		if ($this->rental->isRental($purchaseId)) {
+			$purchase = $this->purchase->findById($purchaseId);
+			$flashMsg = "\"{$purchase->books->title}\"は貸出中でした。";
+			return redirect(route(($session['auth'] === 0) ? 'master.top' : 'normal.top'))->with('valiMsg', $flashMsg);
+		}
+
 		$purchase = $this->rental->apply($purchaseId, $session['id']);
 		$book = $purchase->books;
 
 		$flashMsg = "ID:{$book->id}, タイトル:{$book->title}の貸出申請を提出しました。";
 
-		if ($session['auth'] === 0) {
-			return redirect(route('master.top'))->with('flashMsg', $flashMsg);
-		}
-
-		return redirect(route('normal.top'))->with('flashMsg', $flashMsg);
+		return redirect(route(($session['auth'] === 0) ? 'master.top' : 'normal.top'))->with('flashMsg', $flashMsg);
 	}
 
 	/**

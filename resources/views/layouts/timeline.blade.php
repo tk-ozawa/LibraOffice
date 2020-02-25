@@ -7,8 +7,8 @@
 <li class="nav-item">
 	<a class="nav-link" href="{{ route('search') }}">書籍登録</a>
 </li>
-<li class="nav-item">
-	<a class="nav-link" href="{{ route('timeline') }}">タイムライン</a>
+<li class="nav-item active">
+	<a class="nav-link">タイムライン</a>
 </li>
 <li class="nav-item">
 	<a class="nav-link" href="{{ route('user.list') }}">社員一覧</a>

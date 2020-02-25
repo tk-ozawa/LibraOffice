@@ -10,7 +10,7 @@ class Order extends Model
 
 	public $timestamps = true;
 
-	protected $fillable = ['name', 'request_user_id', 'approval_user_id', 'book_id', 'office_id'];
+	protected $fillable = ['name', 'request_user_id', 'approval_user_id', 'book_id', 'office_id', 'status'];
 
 	public function books()
 	{

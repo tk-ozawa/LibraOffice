@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Services\RentalService;
+use App\Services\TimelineService;
+use App\Services\ReactionService;
 use App\Models\Database\UserProp;
 use App\Models\Eloquent\Rental;
 
@@ -12,16 +14,20 @@ class UserController extends Controller
 {
 	private $user;
 	private $rental;
+	private $timelineService;
+	private $reactionService;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, RentalService $rental)
+	function __construct(UserService $user, RentalService $rental, TimelineService $timelineService, ReactionService $reactionService)
 	{
 		$this->user = $user;
 		$this->rental = $rental;
+		$this->timelineService = $timelineService;
+		$this->reactionService = $reactionService;
 	}
 
 	/**
@@ -53,6 +59,7 @@ class UserController extends Controller
 		$loginUser = $this->user->findByEmail($loginEmail);
 		$session = $request->session();
 		$session->put('id', $loginUser->id);
+		$session->put('name', $loginUser->name);
 		$session->put('email', $loginEmail);
 		$session->put('office_id', $loginUser->office_id);
 		$session->put('auth', $loginUser->auth);
@@ -73,6 +80,22 @@ class UserController extends Controller
 	{
 		$request->session()->flush();
 		return redirect(route('login.form'))->with('flashMsg', 'ログアウトしました。');
+	}
+
+	/**
+	 * ユーザー詳細画面表示処理
+	 */
+	public function goDetail(Request $request, int $userId)
+	{
+		$user = $this->user->findById($userId);
+
+		$rentals = $this->rental->findByUserId($userId);
+
+		// 今までいくら得したか
+		$profitMoney = $this->rental->getHistoryProfitByUserId($userId);
+
+
+		return view('user.profile', compact('user', 'rentals', 'profitMoney'));
 	}
 
 	/**
@@ -108,5 +131,45 @@ class UserController extends Controller
 		$this->user->updateProfile($input, $request->session()->get('id'));
 
 		return;
+	}
+
+	/**
+	 * タイムライン画面表示処理
+	 */
+	public function goTimeline(Request $request)
+	{
+		$timeline = $this->timelineService->getAllQuery()->paginate(15);
+
+		return view('user.timeline', compact('timeline'));
+	}
+
+	/**
+	 * タイムライン情報JSON出力
+	 */
+	public function timelineJSON(Request $request)
+	{
+		$timeline = $this->timelineService->getAllQuery()->get();
+
+		return $timeline->toJson();
+	}
+
+	/**
+	 * リアクションボタン押下処理
+	 */
+	public function reaction(Request $request)
+	{
+		$input = $request->all();
+		$status = $this->reactionService->pushBtn($input['timelineId'], $request->session()->get('id'));
+		return json_encode(['status' => $status]);
+	}
+
+	/**
+	 * ユーザー一覧画面表示処理
+	 */
+	public function goList(Request $request)
+	{
+		$users = $this->user->goList();
+
+		return view('user.list', compact('users'));
 	}
 }

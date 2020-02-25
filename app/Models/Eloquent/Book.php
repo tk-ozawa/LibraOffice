@@ -35,7 +35,7 @@ class Book extends Model
 	public function purchases()
 	{
 		// 1対多
-		return $this->hasMany(
+		return $this->hasOne(
 			'App\Models\Eloquent\Purchase'			// 子テーブルモデル
 			, 'book_id'						// 参照先の外部キー
 			, 'id'							// 参照元の主キー

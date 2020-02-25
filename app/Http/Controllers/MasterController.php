@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
-use App\Services\BookService;
 use App\Services\OrderService;
 use App\Services\PurchaseService;
 use App\Services\RentalService;
@@ -13,7 +12,6 @@ use App\Models\Database\UserProp;
 class MasterController extends Controller
 {
 	private $user;
-	private $book;
 	private $order;
 	private $purchase;
 	private $rental;
@@ -23,10 +21,9 @@ class MasterController extends Controller
 	 *
 	 * @return void
 	 */
-	function __construct(UserService $user, BookService $book, OrderService $order, PurchaseService $purchase, RentalService $rental)
+	function __construct(UserService $user, OrderService $order, PurchaseService $purchase, RentalService $rental)
 	{
 		$this->user = $user;
-		$this->book = $book;
 		$this->order = $order;
 		$this->purchase = $purchase;
 		$this->rental = $rental;
@@ -37,7 +34,7 @@ class MasterController extends Controller
 	 */
 	public function goRegister(Request $request)
 	{
-		return view('master.add');
+		return view('user.add');
 	}
 
 	/**
@@ -46,24 +43,21 @@ class MasterController extends Controller
 	public function register(Request $request)
 	{
 		$input = $request->all();
-
-		// ダミーデータ
-		$session = [
-			'office_id' => 1,
-			'user_id' => 1,
-			'auth' => 0
-		];
+		$session = $request->session()->all();
 
 		$userProp = new UserProp($input);
 		$userProp->office_id = $session['office_id'];	// 登録者と同じオフィス
-		$userProp->password = substr(bin2hex(random_bytes(7)), 0, 7);	// メールで知らせる
+		$userProp->password = substr(bin2hex(random_bytes(7)), 0, 7);	// イイカンジのパスワード文字列
 
-		$newUser = $this->user->add($userProp);
+		$password = $userProp->password;
 
-		// メール送信
+		// メールでパスワードを知らせる
 
-		dd($userProp);
-		// topに戻ってflashMsg
+		// 大阪就プレでは登録完了ページで伝える
+
+		$user = $this->user->add($userProp);
+
+		return view('user.add_complete', compact('user', 'password'));
 	}
 
 
@@ -90,7 +84,9 @@ class MasterController extends Controller
 		// 所持済みのリスト取得
 		$purchases = $this->purchase->getPurchases();
 
-		return view('master.top', compact('rentals', 'rentalsCount', 'requests', 'requestsCount', 'orderings', 'purchases', 'orderingsCount'));
+		$ranking = $this->rental->rentalRanking();
+
+		return view('master.top', compact('rentals', 'rentalsCount', 'requests', 'requestsCount', 'orderings', 'purchases', 'orderingsCount', 'ranking'));
 	}
 
 	/**
@@ -116,6 +112,34 @@ class MasterController extends Controller
 		$purchase = $this->purchase->createPurchase($input['order_id'], $session['id']);
 
 		return redirect(route('master.top'))->with("flashMsg", "発注処理を行いしました。発注ID:{$purchase->id}");
+	}
+
+	/**
+	 * 注文依頼却下画面表示処理
+	 */
+	public function goOrderReject(Request $request, int $orderId)
+	{
+		$input = $request->all();
+
+		$order = $this->order->findById($orderId);
+
+		return view('master.orderReject', compact('order'));
+	}
+
+	/**
+	 * 注文依頼却下処理
+	 */
+	public function orderReject(Request $request)
+	{
+		$input = $request->all();
+		$session = $request->session()->all();
+
+		// 処理
+		$order = $this->order->orderReject($input['order_id'], $session['id']);
+
+		// メール送信
+
+		return redirect(route('master.top'))->with("flashMsg", "次の注文依頼を却下しました。注文ID:{$order->id}");
 	}
 
 	/**

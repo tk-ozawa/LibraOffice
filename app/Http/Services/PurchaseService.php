@@ -13,6 +13,7 @@ use App\Models\Database\BookProp;
 use App\Models\Eloquent\Category;
 use App\Services\RentalService;
 use App\Services\OrderService;
+use App\Services\TimelineService;
 use Carbon\Carbon;
 
 class PurchaseService
@@ -25,8 +26,10 @@ class PurchaseService
 	private $category;
 	private $rentalService;
 	private $author;
+	private $timeline;
 
-	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, Category $category, Author $author, OrderService $orderService, RentalService $rentalService)
+	function __construct(Book $book, Publisher $publisher, Purchase $purchase, User $user, Category $category, Author $author,
+							OrderService $orderService, RentalService $rentalService, TimelineService $timeline)
 	{
 		$this->book = $book;
 		$this->publisher = $publisher;
@@ -36,6 +39,7 @@ class PurchaseService
 		$this->author = $author;
 		$this->orderService = $orderService;
 		$this->rentalService = $rentalService;
+		$this->timeline = $timeline;
 	}
 
 	/**
@@ -73,6 +77,8 @@ class PurchaseService
 		$purchase = $this->purchase->where('id', $purchaseId)->first();
 		$purchase->status = 1;	// 所持
 		$purchase->save();
+
+		$this->timeline->insert('社内図書として追加しました', $purchase->user_id, $purchase->id);
 
 		return $purchase;
 	}
@@ -349,5 +355,27 @@ class PurchaseService
 		}
 
 		return $hitPurchases;
+	}
+
+	/**
+	 * 書籍がDBに登録済みか判別
+	 *
+	 * @param string $ISBN
+	 * @param int $edition
+	 * @return bool
+	 */
+	public function exists(string $ISBN, int $edition): bool
+	{
+		$book = $this->book
+			->where('ISBN', $ISBN)
+			->where('edition', $edition);
+
+		if ($book->exists()) {
+			return $this->purchase
+				->where('book_id', $book->first()->id)
+				->exists();
+		}
+
+		return false;
 	}
 }

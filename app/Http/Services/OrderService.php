@@ -29,8 +29,26 @@ class OrderService
 			->create([
 				'request_user_id' => $requestUserId,
 				'book_id' => $bookId,
-				'office_id' => $officeId
+				'office_id' => $officeId,
+				'status' => 0
 			]);
+	}
+
+	/**
+	 * 注文依頼却下処理
+	 *
+	 * @param int $orderId
+	 * @param int $approvalUserId
+	 * @return Order $order
+	 */
+	public function orderReject(int $orderId, int $approvalUserId): Order
+	{
+		$order = $this->order->where('id', $orderId)->first();
+		$order->approval_user_id = $approvalUserId;
+		$order->status = 2;
+		$order->save();
+
+		return $order;
 	}
 
 	/**
@@ -42,9 +60,9 @@ class OrderService
 	 */
 	public function orderAccept(int $orderId, int $approvalUserId): Order
 	{
-		// 注文依頼に承諾者情報を追加
 		$order = $this->order->where('id', $orderId)->first();
 		$order->approval_user_id = $approvalUserId;
+		$order->status = 1;
 		$order->save();
 
 		return $order;
@@ -57,7 +75,7 @@ class OrderService
 	 */
 	public function getRequests(): array
 	{
-		$reuqests = $this->order->whereNull('approval_user_id')->get();
+		$reuqests = $this->order->where('status', 0)->get();
 
 		$reqProps = [];
 		foreach ($reuqests as $req) {

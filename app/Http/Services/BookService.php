@@ -172,6 +172,11 @@ class BookService
 		$pubDate = (!empty($pubDateArr)) ? date("Y-m-d", strtotime($pubDateArr[0])) : null;	// そもそもpubDateが存在しないパターンがある 例)WEB+DB Press
 		$bookProp->release_date = $pubDate;	// pubDate表記をY-m-dに変換
 
+		if (empty($bookProp->release_date)) {	// 「マスタリングTCP/IP入門編 第5版」等がRakutenに未登録
+			// 暫定的に取得ミス扱い。release_dateカラムのnullable化などで修正することで改善する予定
+			return null;
+		}
+
 		$bookProp->ISBN = $bookDatas['ISBN'];
 		$bookProp->edition = $bookDatas['edition'];
 
@@ -302,20 +307,5 @@ class BookService
 		$bookObj = $query->first();
 
 		return $bookObj;
-	}
-
-	/**
-	 * 書籍がDBに登録済みか判別
-	 *
-	 * @param string $ISBN
-	 * @param int $edition
-	 * @return bool
-	 */
-	public function exists(string $ISBN, int $edition): bool
-	{
-		return $this->book
-			->where('ISBN', $ISBN)
-			->where('edition', $edition)
-			->exists();
 	}
 }

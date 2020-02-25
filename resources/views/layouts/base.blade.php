@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="icon" href="{{ asset('favicon.ico') }}">
 	<title>@yield('title')</title>
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<script src="{{ asset('js/app.js') }}" defer></script>
@@ -13,8 +14,10 @@
 <body>
 
 <header>
-	<nav class="navbar navbar-expand-md navbar-light" style="background-color: #e3f2fd;">
-		<a class="navbar-brand" href="@if(session('auth') === 0) {{ route('master.top')}} @else {{ route('normal.top') }} @endif">LibraOffice</a>
+	<nav class="navbar navbar-expand-md navbar-light" style="background-color: @if(session('auth') === 1)#e3f2fd; @else #607D8B; @endif">
+		<a class="navbar-brand" href="@if(session('auth') === 0) {{ route('master.top')}} @else {{ route('normal.top') }} @endif">
+			<img src="{{ asset('img/logo.png') }}" style="height:30px;">
+		</a>
 		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false" aria-label="ナビゲーションの切替">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -35,14 +38,16 @@
 	</nav>
 </header>
 
-@yield('body')
+<div class="container">
+	@yield('body')
+</div>
 
 <script>
 function RentalCheck (purchaseId, bookTitle) {
 	let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `/book/${purchaseId}/rental`
+		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/book/${purchaseId}/rental`
 	}
 }
 
@@ -50,9 +55,10 @@ function ReturnCheck (purchaseId, bookTitle) {
 	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `/book/${purchaseId}/return`
+		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/book/${purchaseId}/return`
 	}
 }
 </script>
+@yield('script')
 </body>
 </html>

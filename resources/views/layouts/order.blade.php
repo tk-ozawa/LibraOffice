@@ -7,16 +7,23 @@
 <li class="nav-item active">
 	<a class="nav-link" @yield('navLinkHref')>書籍登録</a>
 </li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ route('timeline') }}">タイムライン</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ route('user.list') }}">社員一覧</a>
+</li>
 @endsection
 
 @section('body')
 @if(session('valiMsg'))
-<p>{{ session('valiMsg') }}</p>
-<p>
-	手動入力フォームは <span><a href="/order/input">こちら</a></span>
-</p>
+<div class="alert alert-danger" role="alert">
+	<span>{{ session('valiMsg') }}　手動入力フォームは <a href="{{ env('MIX_REMOTE_BASE_URL') }}/order/input">こちら</a></span>
+</div>
 @elseif (session('infoMsg'))
-<p>{{ session('infoMsg') }}</p>
+<div class="alert alert-warning" role="alert">
+	<span>{{ session('infoMsg') }}</span>
+</div>
 @endif
 
 @yield('mainBody')
