@@ -314,7 +314,7 @@ class RentalService
 	public function rentalRanking()
 	{
 		return $this->rental
-			->select(DB::raw('count(*) as id, purchase_id'))
+		->select(DB::raw('count(*) as rank, purchase_id'))
 			->with(['purchases' => function ($q) {
 				$q->select('purchases.id', 'purchases.book_id', 'purchases.purchase_date')
 					->where('status', 1)	// 社内図書のみ取得
@@ -332,6 +332,7 @@ class RentalService
 					}]);
 			}])
 			->groupBy('purchase_id')
+			->orderBy('rank', 'DESC')
 			->limit(5)
 			->get();
 	}
