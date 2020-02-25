@@ -91,7 +91,11 @@ class UserController extends Controller
 
 		$rentals = $this->rental->findByUserId($userId);
 
-		return view('user.profile', compact('user', 'rentals'));
+		// 今までいくら得したか
+		$profitMoney = $this->rental->getHistoryProfitByUserId($userId);
+
+
+		return view('user.profile', compact('user', 'rentals', 'profitMoney'));
 	}
 
 	/**
