@@ -19,7 +19,7 @@
 	<button type="submit" class="btn btn-primary">検索</button>
 </form>
 <br>
-<p>手動入力フォームは <a href="/order/input">こちら</a></p>
+<p>手動入力フォームは <a href="{{ route('order.input') }}">こちら</a></p>
 </div>
 
 @endsection
