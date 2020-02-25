@@ -46,11 +46,13 @@
 
 @section('script')
 <script>
+	console.log(process.env.MIX_REMOTE_BASE_URL)
+
 function btnCheck (order, confirmStr) {
 	let res = confirm(`${confirmStr}しますか？`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `/master/order/${order}`
+		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/master/order/${order}`
 	}
 }
 </script>
