@@ -44,8 +44,6 @@
 			<tr>
 				<th scope="row" class="index-col">{{ $loop->iteration }}</th scope="row">
 				<td class="btn-col">
-
-
 					@if ($ren['isRental'])
 						@if ($ren['rentalUserId'] === session('id'))
 							<button class="btn btn-danger" onclick="ReturnCheck({{ $ren['purchases']->id }}, '{{ $book->title }}');">返却する</button>
@@ -55,7 +53,6 @@
 					@else
 						<button class="btn btn-success" onclick="RentalCheck({{ $ren['purchases']->id }}, '{{ $book->title }}');">借りて読む</button>
 					@endif
-
 				</td>
 				<td class="img-col"><a href="{{ route('book.detail', ['purchaseId' => $ren['purchases']->id]) }}"><img src="{{ $book->img_url }}"></a></td>
 				<td><a href="{{ route('book.detail', ['purchaseId' => $ren['purchases']->id]) }}">{{ $book->title }} 第{{ $book->edition }}版</a></td>
@@ -66,8 +63,7 @@
 					@endforeach
 				</td>
 				<td>{{ $ren['purchases']->purchase_date }}</td>
-				</tr>
-			@if(!$loop->last) <br> @endif
+			</tr>
 			@endforeach
 		</tbody>
 	</table>
