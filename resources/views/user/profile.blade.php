@@ -19,6 +19,10 @@
 			<th>プロフィール</th>
 			<td>{!! nl2br($user->profile) !!}</td>
 		</tr>
+		<tr>
+			<th>いくら得したか</th>
+			<td>{{ $profitMoney }}円</td>
+		</tr>
 	</tbody>
 </table>
 
