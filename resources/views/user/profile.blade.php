@@ -50,12 +50,12 @@
 				<td class="btn-col">
 					@if ($ren['isRental'])
 						@if ($ren['rentalUserId'] === session('id'))
-							<button class="btn btn-danger" onclick="ReturnCheck({{ $ren['purchases']->id }}, '{{ $book->title }}');">返却する</button>
+							<button class="btn btn-danger" onclick="ReturnCheck('{{ env('MIX_REMOTE_BASE_URL') }}', {{ $ren['purchases']->id }}, '{{ $book->title }}');">返却する</button>
 						@else
 							<a class="btn btn-warning">貸出中</a>
 						@endif
 					@else
-						<button class="btn btn-success" onclick="RentalCheck({{ $ren['purchases']->id }}, '{{ $book->title }}');">借りて読む</button>
+						<button class="btn btn-success" onclick="RentalCheck('{{ env('MIX_REMOTE_BASE_URL') }}', {{ $ren['purchases']->id }}, '{{ $book->title }}');">借りて読む</button>
 					@endif
 				</td>
 				<td class="img-col"><a href="{{ route('book.detail', ['purchaseId' => $ren['purchases']->id]) }}"><img src="{{ $book->img_url }}"></a></td>

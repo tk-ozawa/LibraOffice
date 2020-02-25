@@ -62,7 +62,7 @@
 
 @if($isRentalUserArr['flg'])
 	@if($isRentalUserArr['userId'] === session('id'))
-		<button class="btn btn-danger" onclick="ReturnCheck({{ $purchase->id }}, '{{ $book->title }}');">返却する</button>
+		<button class="btn btn-danger" onclick="ReturnCheck('{{ env('MIX_REMOTE_BASE_URL') }}', {{ $purchase->id }}, '{{ $book->title }}');">返却する</button>
 	@else
 		<a class="btn btn-warning">貸出中</a>
 	@endif
