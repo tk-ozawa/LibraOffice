@@ -1,14 +1,18 @@
 <template>
   <div class="row">
     <div class="col-2 btn-col">
-      <div v-show="loading" class="spinner">
+      <div v-if="loading" class="spinner">
         <div class="bounce1"></div>
         <div class="bounce2"></div>
         <div class="bounce3"></div>
       </div>
-      <button v-if="!loading && purchase.rentals && purchase.rentals.user_id === loginId" class="btn btn-danger" @click="clickReturn()">返却する</button>
-      <button v-if="!loading && purchase.rentals && purchase.rentals.user_id !== loginId" class="btn btn-warning" @click="clickDisable()">貸出中</button>
-      <button v-show="!loading && !purchase.rentals" class="btn btn-primary" @click="clickRental()">貸出する</button>
+      <div v-else>
+        <div v-if="purchase.rentals">
+          <button v-if="purchase.rentals.user_id === loginId" class="btn btn-danger" @click="clickReturn()">返却する</button>
+          <button v-else class="btn btn-warning" @click="clickDisable()">貸出中</button>
+        </div>
+        <button v-else class="btn btn-primary" @click="clickRental()">貸出する</button>
+      </div>
     </div>
     <div class="col-3">
       <a :href="`${$parent.baseUrl}/book/${purchase.id}`">

@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div v-show="loading" class="loader"></div>
-    <div v-show="!loading" class="table-responsive">
-      <div v-if="!getItems">
-        <p>ヒットしませんでした。</p>
-      </div>
-      <div v-if="getItems">
-        <div v-for="purchase in getItems" :key="purchase.id" class="record">
-          <book-component
-            :purchase="purchase"
-            >
-          </book-component>
+    <div v-if="loading" class="loader"></div>
+    <div v-else>
+      <div class="table-responsive">
+        <div v-if="getItems">
+          <div v-for="purchase in getItems" :key="purchase.id" class="record">
+            <book-component
+              :purchase="purchase">
+            </book-component>
+          </div>
+        </div>
+        <div v-else>
+          <p>ヒットしませんでした。</p>
         </div>
       </div>
-    </div>
-
-    <div v-show="!loading">
       <paginate
         :pageCount="getPageCount"
         :page-range="3"
@@ -60,9 +58,7 @@ export default {
         this.purchases = response.data
         this.loading = false  // ローディングアニメーション終了
       })
-      .catch(error => {
-        console.log(error)
-      })
+      .catch(error => console.error(error))
   },
   computed: {
     getItems: function() {
