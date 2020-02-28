@@ -200,6 +200,25 @@ class BookController extends Controller
 	}
 
 	/**
+	 * 貸出申請処理(JSON)
+	 */
+	public function rentalJSON(Request $request, int $purchaseId)
+	{
+		$session = $request->session()->all();
+
+		// 貸出申請中に貸し出されていた場合(同時処理時の排他制御)
+		if ($this->rental->isRental($purchaseId)) {
+			$rentals = $this->rental->rentalUserArr($purchaseId);
+			return json_encode(compact('rentals'));
+		}
+
+		$this->rental->apply($purchaseId, $session['id']);	// 貸出処理
+
+		$rentals = $this->rental->rentalUserArr($purchaseId);
+		return json_encode(compact('rentals'));
+	}
+
+	/**
 	 * 返却申請処理
 	 */
 	public function return(Request $request, int $purchaseId)
@@ -216,6 +235,19 @@ class BookController extends Controller
 		}
 
 		return redirect(route('normal.top'))->with('flashMsg', $flashMsg);
+	}
+
+	/**
+	 * 貸出申請処理(JSON)
+	 */
+	public function returnJSON(Request $request, int $purchaseId)
+	{
+		$session = $request->session()->all();
+
+		$this->rental->return($purchaseId, $session['id']);	// 貸出処理
+
+		$rentals = $this->rental->rentalUserArr($purchaseId);
+		return json_encode(compact('rentals'));
 	}
 
 	/**
@@ -312,5 +344,15 @@ class BookController extends Controller
 		$hitCount = count($hitRentals);
 
 		return view('book.find.user', compact('hitRentals', 'hitCount', 'user'));
+	}
+
+	/**
+	 * 社内図書一覧取得API
+	 */
+	public function purchasesJSON(Request $request)
+	{
+		$purchases = $this->purchase->getPurchasesArr();
+
+		echo json_encode($purchases);
 	}
 }
