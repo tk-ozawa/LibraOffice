@@ -148,6 +148,34 @@ class PurchaseService
 	}
 
 	/**
+	 * 社内で所持している書籍一覧を全て配列で取得
+	 */
+	public function getPurchasesArr()
+	{
+		$purchases = $this->purchase
+			->where('status', 1)
+			->with(['books' => function ($q) {
+				$q->select('books.id', 'books.title', 'books.price', 'books.ISBN', 'books.edition', 'books.release_date', 'books.img_url', 'books.publisher_id')
+					->with(['categories' => function ($q) {
+						$q->select('categories.id', 'categories.name');
+					}])
+					->with(['authors' => function ($q) {
+						$q->select('authors.id', 'authors.name');
+					}])
+					->with(['publishers' => function ($q) {
+						$q->select('publishers.id', 'publishers.name');
+					}]);
+			}])
+			->get()->toArray();
+
+		foreach ($purchases as $key => $purchase) {
+			$purchases[$key]['rentals'] = $this->rentalService->rentalUserArr($purchase['id']);
+		}
+
+		return $purchases;
+	}
+
+	/**
 	 * キーワードから本情報を取得する
 	 *
 	 * @param string $keyword
@@ -208,6 +236,14 @@ class PurchaseService
 
 		$hitPurchases = [];
 		foreach ($books as $book) {
+			// 注文依頼を却下された本は以下の条件で省く必要がある
+			$isPurchase = $this->purchase
+				->where('book_id', $book->id)
+				->exists();
+			if (!$isPurchase) {
+				continue;
+			}
+
 			$purchase = $this->purchase
 				->where('book_id', $book->id)
 				->with(['books' => function ($q) {
@@ -224,7 +260,7 @@ class PurchaseService
 				}])
 				->first();
 
-			$rental = $this->rentalService->isRentalUser($purchase->id);
+			$rental = ($purchase) ? $this->rentalService->isRentalUser($purchase->id) : null;
 
 			$hitPurchases[] = compact('purchase', 'rental');
 		}
