@@ -355,4 +355,24 @@ class BookController extends Controller
 
 		echo json_encode($purchases);
 	}
+
+	/**
+	 * 貸出中の社内図書一覧取得API
+	 */
+	public function rentalsJSON(Request $request)
+	{
+		$session = $request->session()->all();
+
+		$rentals = $this->rental->getRentals($session['id']);
+		if (!$rentals) {
+			return null;
+		}
+
+		$retArr = [];
+		foreach($rentals as $rental) {
+			$retArr[] = $rental->purchases;
+		}
+
+		return json_encode($retArr);
+	}
 }

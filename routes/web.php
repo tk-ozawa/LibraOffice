@@ -11,7 +11,9 @@
 |
 */
 
-// Route::get('/foo', 'BookController@getRanking');
+Route::get('/foo', function () {
+	return view('welcome');
+});
 
 Route::get('/', 'UserController@goLogin')->name('login.form');
 Route::post('/login', 'UserController@login')->name('login');
@@ -50,6 +52,7 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
 	Route::get('/purchases/json', 'BookController@purchasesJSON')->name('purchases.json');
+	Route::get('/rentals/json', 'BookController@rentalsJSON')->name('rentals.json');
 
 	Route::get('/normal/settings', 'NormalController@goSettings')->name('mypage.settings.normal');
 
