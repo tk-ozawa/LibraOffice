@@ -4,9 +4,12 @@ window.Vue = require('vue');
 
 Vue.prototype.$http = window.axios;
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('paginate', require('vuejs-paginate'));
+Vue.component('book-list-component', require('./components/BookListComponent.vue').default);
+Vue.component('book-component', require('./components/BookComponent.vue').default);
 Vue.component('profile-edit-component', require('./components/ProfileEditComponent.vue').default);
 Vue.component('timeline-component', require('./components/TimelineComponent.vue').default);
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 const app = new Vue({
 	el: '#app',
