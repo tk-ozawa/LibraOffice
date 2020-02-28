@@ -49,7 +49,7 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/book/find/author/{authorId}', 'BookController@findByAuthorId')->name('book.find.author');
 
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
-	Route::get('/bookList/json', 'BookController@purchasesJSON')->name('top.json');
+	Route::get('/purchases/json', 'BookController@purchasesJSON')->name('purchases.json');
 
 	Route::get('/normal/settings', 'NormalController@goSettings')->name('mypage.settings.normal');
 
