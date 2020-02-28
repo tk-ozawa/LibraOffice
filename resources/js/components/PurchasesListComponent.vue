@@ -37,7 +37,7 @@
 export default {
   props: {
     login: String,  // ログインユーザーID
-    csrfToken: String,
+    getUrl: String
   },
   data() {
     return {
@@ -55,7 +55,7 @@ export default {
     }
   },
   created() {
-    axios.get(`${this.baseUrl}/bookList/json`)
+    axios.get(`${this.getUrl}`)
       .then(response => {
         this.purchases = response.data
         this.loading = false  // ローディングアニメーション終了
