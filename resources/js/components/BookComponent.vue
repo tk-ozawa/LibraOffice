@@ -1,21 +1,26 @@
 <template>
-  <div>
-    <td class="btnCol">
-      <button v-if="purchase.rentals && purchase.rentals.user_id === loginId" class="btn btn-danger" @click="clickReturn(purchase.id, purchase.books.title)">返却する</button>
-      <button v-if="purchase.rentals && purchase.rentals.user_id !== loginId" class="btn btn-warning">貸出中</button>
-      <button v-show="!purchase.rentals" class="btn btn-primary" @click="clickRental(purchase.id, purchase.books.title)">貸出する</button>
-    </td>
-    <td>
+  <div class="row">
+    <div class="col-2 btn-col">
+      <div v-show="loading" class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+      <button v-if="!loading && purchase.rentals && purchase.rentals.user_id === loginId" class="btn btn-danger" @click="clickReturn()">返却する</button>
+      <button v-if="!loading && purchase.rentals && purchase.rentals.user_id !== loginId" class="btn btn-warning" @click="clickDisable()">貸出中</button>
+      <button v-show="!loading && !purchase.rentals" class="btn btn-primary" @click="clickRental()">貸出する</button>
+    </div>
+    <div class="col-3">
       <a :href="`${$parent.baseUrl}/book/${purchase.id}`">
         <img :src="purchase.books.img_url">
       </a>
-    </td>
-    <td>
+    </div>
+    <div class="col-2">
       <a :href="`${$parent.baseUrl}/book/${purchase.id}`">
         {{purchase.books.title}}
       </a>
-    </td>
-    <td class="categoriesCol">
+    </div>
+    <div class="col-4 categoriesCol">
       <ul>
         <li v-for="(category) in purchase.books.categories" :key="category.id">
             <a :href="`${$parent.baseUrl}/book/find/category/${category.name}`">
@@ -23,12 +28,12 @@
             </a>
         </li>
       </ul>
-    </td>
-    <td>
+    </div>
+    <div class="col-1">
       <p>
         {{purchase.purchase_date}}
       </p>
-    </td>
+    </div>
   </div>
 </template>
 
@@ -40,17 +45,19 @@ export default {
   data() {
     return {
       loginId: parseInt(this.$parent.login),  // BladeからはStringの値しか受け取れない問題の回避
+      loading: false,
     }
   },
   methods: {
-    clickRental(purchaseId, bookTitle) {
-      let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
+    clickRental() {
+      let res = confirm(`貸出申請しますか？${this.purchase.books.title}`)
 
       // OKなら移動
       if (res === true) {
+        this.loading = true
         axios
           .post(
-              `${this.$parent.baseUrl}/book/${purchaseId}/rental`, null
+              `${this.$parent.baseUrl}/book/${this.purchase.id}/rental`, null
             )
           .then(res => {
             let rentals = res.data.rentals
@@ -62,32 +69,35 @@ export default {
             }
             this.purchase.rentals = rentals // リアクティブに動いた！
           })
+          .catch(err => console.error(err))
+          .finally(() => this.loading = false)
       }
     },
-    clickReturn(purchaseId, bookTitle) {
-      let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
+    clickReturn() {
+      let res = confirm(`返却しますか？:${this.purchase.books.title}`)
 
       // OKなら移動
       if (res === true) {
-        // window.location.href = `${this.$parent.baseUrl}/book/${purchaseId}/return`
+        this.loading = true
         axios
           .post(
-              `${this.$parent.baseUrl}/book/${purchaseId}/return`, null
+              `${this.$parent.baseUrl}/book/${this.purchase.id}/return`, null
             )
           .then(res => {
             let rentals = res.data.rentals
-            alert(`"${this.purchase.books.title}"を返却しました。`)
             this.purchase.rentals = rentals // リアクティブに動いた！
           })
+          .catch(err => console.error(err))
+          .finally(() => this.loading = false)
       }
+    },
+    clickDisable() {
+      alert('貸出中の為借りれません')
     },
     clickCallback(pageNum) {
       this.currentPage = Number(pageNum)
     }
   },
-  created() {
-    // console.log(this.purchase)
-  }
 }
 </script>
 
@@ -112,74 +122,48 @@ export default {
   background-color: #fff;
   color: #888;
 }
-
-.btnCol {
+.btn-col {
   text-align: center;
 }
 
-.loader {
-  font-size: 10px;
-  margin: auto;
-  position: fixed;
-  top: 40%;
-  left: 45%;
-  text-indent: -9999em;
-  width: 11em;
-  height: 11em;
-  border-radius: 50%;
-  background: #0094ff;
-  background: -moz-linear-gradient(left, #0094ff 10%, rgba(0,148,255, 0) 42%);
-  background: -webkit-linear-gradient(left, #0094ff 10%, rgba(0,148,255, 0) 42%);
-  background: -o-linear-gradient(left, #0094ff 10%, rgba(0,148,255, 0) 42%);
-  background: -ms-linear-gradient(left, #0094ff 10%, rgba(0,148,255, 0) 42%);
-  background: linear-gradient(to right, #0094ff 10%, rgba(0,148,255, 0) 42%);
-  -webkit-animation: load3 1.4s infinite linear;
-  animation: load3 1.4s infinite linear;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
+.spinner {
+  margin: 10px auto 0;
+  width: 70px;
 }
-.loader:before {
-  width: 50%;
-  height: 50%;
-  background: #0094ff;
-  border-radius: 100% 0 0 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: '';
+
+.spinner > div {
+  width: 18px;
+  height: 18px;
+  background-color: #00c9e8;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
 }
-.loader:after {
-  background: #ffffff;
-  width: 75%;
-  height: 75%;
-  border-radius: 50%;
-  content: '';
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
 }
-@-webkit-keyframes load3 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
 }
-@keyframes load3 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
   }
 }
 </style>
