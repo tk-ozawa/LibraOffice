@@ -2,48 +2,40 @@
   <div>
     <div v-show="loading" class="loader"></div>
     <div v-show="!loading" class="table-responsive">
-      <table class="table text-nowrap">
-        <thead>
-          <tr>
-            <th></th>
-            <th>img</th>
-            <th>タイトル</th>
-            <th>カテゴリ</th>
-            <th>追加日</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="purchase in getItems" :key="purchase.id">
-            <book-component
-              :purchase="purchase"
-              >
-            </book-component>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="!getItems">
+        <p>ヒットしませんでした。</p>
+      </div>
+      <div v-if="getItems">
+        <div v-for="purchase in getItems" :key="purchase.id" class="record">
+          <book-component
+            :purchase="purchase"
+            >
+          </book-component>
+        </div>
+      </div>
     </div>
 
-    <paginate
-      v-show="!loading"
-      :pageCount="getPageCount"
-      :page-range="3"
-      :margin-pages="2"
-      :containerClass="'pagination'"
-      :page-class="'page-item'"
-      :page-link-class="'page-link'"
-      :prev-class="'page-item'"
-      :prev-link-class="'page-link'"
-      :next-class="'page-item'"
-      :next-link-class="'page-link'"
-      :clickHandler="clickCallback">
-    </paginate>
+    <div v-show="!loading">
+      <paginate
+        :pageCount="getPageCount"
+        :page-range="3"
+        :margin-pages="2"
+        :containerClass="'pagination'"
+        :page-class="'page-item'"
+        :page-link-class="'page-link'"
+        :prev-class="'page-item'"
+        :prev-link-class="'page-link'"
+        :next-class="'page-item'"
+        :next-link-class="'page-link'"
+        :clickHandler="clickCallback">
+      </paginate>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    auth: String,
     login: String,  // ログインユーザーID
     csrfToken: String,
   },
@@ -63,7 +55,7 @@ export default {
     }
   },
   created() {
-    axios.get(`${this.baseUrl}/${this.auth}/json`)
+    axios.get(`${this.baseUrl}/bookList/json`)
       .then(response => {
         this.purchases = response.data
         this.loading = false  // ローディングアニメーション終了
@@ -87,6 +79,9 @@ export default {
 </script>
 
 <style scoped>
+.record {
+  margin-bottom: 2rem;
+}
 .categoriesCol ul {
   display: flex;
   flex-wrap: wrap;
