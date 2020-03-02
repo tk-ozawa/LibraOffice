@@ -39,7 +39,9 @@
 </header>
 
 <div class="container">
-	@yield('body')
+	<div id="app">
+		@yield('body')
+	</div>
 </div>
 
 <script>

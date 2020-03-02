@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/foo', 'BookController@getRanking');
+Route::get('/foo', function () {
+	return view('welcome');
+});
 
 Route::get('/', 'UserController@goLogin')->name('login.form');
 Route::post('/login', 'UserController@login')->name('login');
@@ -37,7 +39,9 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 
 	Route::get('/book/{purchaseId}', 'BookController@goBookDetail')->name('book.detail');
 	Route::get('/book/{purchaseId}/rental', 'BookController@rental')->name('book.rental');
+	Route::post('/book/{purchaseId}/rental', 'BookController@rentalJSON')->name('book.rental.json');
 	Route::get('/book/{purchaseId}/return', 'BookController@return')->name('book.return');
+	Route::post('/book/{purchaseId}/return', 'BookController@returnJSON')->name('book.return.json');
 
 	Route::get('/book/find/title', 'BookController@findTitle')->name('book.find.title');
 	Route::get('/book/find/category/{categoryName}', 'BookController@findByCategoryName')->name('book.find.category');
@@ -47,6 +51,9 @@ Route::group(['middleware' => ['CheckRegistered']], function () {
 	Route::get('/book/find/author/{authorId}', 'BookController@findByAuthorId')->name('book.find.author');
 
 	Route::get('/normal', 'NormalController@goTop')->name('normal.top');
+	Route::get('/purchases/json', 'BookController@purchasesJSON')->name('purchases.json');
+	Route::get('/rentals/json', 'BookController@rentalsJSON')->name('rentals.json');
+
 	Route::get('/normal/settings', 'NormalController@goSettings')->name('mypage.settings.normal');
 
 	Route::get('/user/detail/{userId}', 'UserController@goDetail')->name('user.detail');
