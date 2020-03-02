@@ -39,23 +39,25 @@
 </header>
 
 <div class="container">
-	@yield('body')
+	<div id="app">
+		@yield('body')
+	</div>
 </div>
 
 <script>
-function RentalCheck (purchaseId, bookTitle) {
+function RentalCheck (baseUrl, purchaseId, bookTitle) {
 	let res = confirm(`貸出申請しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/book/${purchaseId}/rental`
+		window.location.href = `${baseUrl}/book/${purchaseId}/rental`
 	}
 }
 
-function ReturnCheck (purchaseId, bookTitle) {
+function ReturnCheck (baseUrl, purchaseId, bookTitle) {
 	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/book/${purchaseId}/return`
+		window.location.href = `${baseUrl}/book/${purchaseId}/return`
 	}
 }
 </script>

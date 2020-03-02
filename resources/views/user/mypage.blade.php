@@ -9,41 +9,10 @@
 @endsection
 
 @section('body')
-
-<div class="container">
-
-<h2>貸出中リスト</h2>
-@if($rentals)
-<div class="table-responsive">
-	<table class="table text-nowrap table-hover">
-		<thead>
-			<tr>
-				<th>#</th>
-				<th scope="col">タイトル</th>
-				<th scope="col">借りた日</th>
-				<th scope="col">ボタン</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach($rentals as $ren)
-			@php $book = $ren->purchases->books; @endphp
-			<tr>
-				<td>{{ $loop->iteration }}</td>
-				<td>
-					<a href="{{ route('book.detail', ['purchaseId' => $ren->purchase_id]) }}">
-					{{ $book->title }} 第{{ $book->edition }}版
-					</a>
-				</td>
-				<td>{{ substr($ren->created_at, 0, 10) }}</td>
-				<td><button class="btn btn-danger" onclick="ReturnCheck({{ $ren->purchase_id }}, '{{ $book->title }}');">返却する</button></td>
-			</tr>
-		@endforeach
-		</tbody>
-	</table>
-</div>
-@else
-<p>貸出中の書籍は現在ありません。</p>
-@endif
+<rentals-list-component
+	get-url="{{ route('rentals.json') }}"
+	login="{{ session('id') }}">
+</rentals-list-component>
 
 <h2>貸出履歴</h2>
 @if (!$rentalsHistory)
@@ -83,7 +52,7 @@
 <h2>あなたがこれまでに得した金額</h2>
 <p>(読んだ本の総額)</p>
 <div style="display:flex">
-	<p>{{ $profitMoney }}円</p>　
+	<p>{{ $profitMoney }}円</p>
 	<a href="https://twitter.com/share" class="twitter-share-button"
 	data-text="あなたが今までにLibraOfficeを使って得した金額は {{ $profitMoney }}円です！"
 	data-lang="ja"
@@ -127,7 +96,4 @@
 		<button class="btn btn-danger btn-block" type="submit">ログアウト</button>
 	</form>
 </div>
-
-</div>
-
 @endsection

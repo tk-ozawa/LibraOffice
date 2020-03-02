@@ -139,6 +139,23 @@ class RentalService
 	}
 
 	/**
+	 * 貸出中のユーザーを取得
+	 *
+	 * @param int $purchaseId
+	 * @return array|null
+	 */
+	public function rentalUserArr(int $purchaseId)
+	{
+		$rental = $this->rental
+			->where('purchase_id', $purchaseId)
+			->where('status', 0)
+			->first();
+
+		// first()がnullの場合、toArray()をそのまま使えない
+		return ($rental) ? $rental->toArray() : null;
+	}
+
+	/**
 	 * ユーザーIDから貸出中リストを取得する
 	 *
 	 * @param int $userId
