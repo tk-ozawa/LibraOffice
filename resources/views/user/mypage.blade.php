@@ -52,7 +52,7 @@
 <h2>あなたがこれまでに得した金額</h2>
 <p>(読んだ本の総額)</p>
 <div style="display:flex">
-	<p>{{ $profitMoney }}円</p>　
+	<p>{{ $profitMoney }}円</p>
 	<a href="https://twitter.com/share" class="twitter-share-button"
 	data-text="あなたが今までにLibraOfficeを使って得した金額は {{ $profitMoney }}円です！"
 	data-lang="ja"

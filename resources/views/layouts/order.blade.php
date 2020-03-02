@@ -18,7 +18,7 @@
 @section('body')
 @if(session('valiMsg'))
 <div class="alert alert-danger" role="alert">
-	<span>{{ session('valiMsg') }}　手動入力フォームは <a href="{{ env('MIX_REMOTE_BASE_URL') }}/order/input">こちら</a></span>
+	<span>{{ session('valiMsg') }}　手動入力フォームは <a href="'{{ env('MIX_REMOTE_BASE_URL') }}'/order/input">こちら</a></span>
 </div>
 @elseif (session('infoMsg'))
 <div class="alert alert-warning" role="alert">

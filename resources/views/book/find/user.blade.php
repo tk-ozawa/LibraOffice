@@ -26,7 +26,7 @@
 			<tr>
 				<th scope="row" class="index-col">{{ $loop->iteration }}</th scope="row">
 				<td class="btn-col">
-					<button class="btn btn-danger" onclick="ReturnCheck({{ $ren->purchase_id }}, '{{ $book->title }}');">返却する</button>
+					<button class="btn btn-danger" onclick="ReturnCheck('{{ env('MIX_REMOTE_BASE_URL') }}', {{ $ren->purchase_id }}, '{{ $book->title }}');">返却する</button>
 				</td>
 				<td class="img-col"><a href="{{ route('book.detail', ['purchaseId' => $ren->purchase_id]) }}"><img src="{{ $book->img_url }}"></a></td>
 				<td><a href="{{ route('book.detail', ['purchaseId' => $ren->purchase_id]) }}">{{ $book->title }} 第{{ $book->edition }}版</a></td>
@@ -45,11 +45,11 @@
 </div>
 
 <script>
-function ReturnCheck (purchaseId, bookTitle) {
+function ReturnCheck (baseUrl, purchaseId, bookTitle) {
 	let res = confirm(`返却しますか？${purchaseId}:${bookTitle}`)
 	if ( res == true ) {
 		// OKなら移動
-		window.location.href = `${process.env.MIX_REMOTE_BASE_URL}/book/${purchaseId}/return`
+		window.location.href = `${baseUrl}/book/${purchaseId}/return`
 	}
 }
 </script>
