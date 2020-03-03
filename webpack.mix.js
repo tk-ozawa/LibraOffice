@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.setResourceRoot('http://tk-ozawa.info/LibraOffice/public/');
+mix.setResourceRoot('https://tk-ozawa.info/LibraOffice/public/');
 
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
