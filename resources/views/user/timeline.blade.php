@@ -11,7 +11,6 @@
 		<timeline-component
 			login="{{ session('id') }}"
 			name="{{ session('name') }}"
-			token="{{ csrf_token() }}"
 		></timeline-component>
 	</div>
 </div>

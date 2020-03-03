@@ -69,7 +69,6 @@ export default {
   props: {
     login: String,  // ログインユーザーID
     name: String, // ログインユーザー名
-    token: String
   },
   data() {
     return {
@@ -77,7 +76,6 @@ export default {
       timelineLists: [],
       isReactionlists: [],
       reactionUserslists: [],
-      csrf_token: this.token,
       loading: true,
       baseUrl: process.env.MIX_REMOTE_BASE_URL
     }
@@ -91,7 +89,6 @@ export default {
         .post(
           `${this.baseUrl}/timeline/reaction`,
           { timelineId: lineId },
-          { headers: {'X-CSRF-TOKEN': this.csrf_token} }
         )
         .then(res => {
           let cnt = 0
