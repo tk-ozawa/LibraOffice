@@ -12,6 +12,6 @@ npm-debug.log
 yarn-error.log
 
 /public/js
-/public/mix-manifest.json
-webpack.mix.js
+/public/*.json
+*.mix.js
 
